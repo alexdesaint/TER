@@ -10,3 +10,5 @@ https://github.com/adafruit/Adafruit-GFX-Library (GFX library)
 
 Pour l'IDE je vous conseille VS Code mais Atom est possible.
 Tout est codé avec le plug-in "PlatformIO"
+
+Partie gestion de projet : https://github.com/Alexdesaint/TER/projects/1
