@@ -30,7 +30,7 @@ void setup() {
   display.println(F("nonnnn"));
   display.display();
 
-  // Mohamed et Alexandre
+  // Mohamed et Alexandre et popolyte
 }
 
 void loop() {
