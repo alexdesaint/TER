@@ -29,8 +29,6 @@ void setup() {
   display.println(F("OUIIII"));
   display.println(F("nonnnn"));
   display.display();
-
-  // Mohamed et Alexandre et popolyte
 }
 
 void loop() {
