@@ -1,4 +1,4 @@
-#include <Ecran.hpp>
+#include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -15,11 +15,11 @@ RtcDS3231<TwoWire> Rtc(Wire);
 #define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-void Ecran::test() {
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
-  }
+#define countof(a) (sizeof(a) / sizeof(a[0]))
+
+void printDateTime(const RtcDateTime& dt)
+{
+    char datestring[20];
 
     snprintf_P(datestring, 
             countof(datestring),
@@ -58,7 +58,7 @@ void setup ()
         //    1) first time you ran and the device wasn't running yet
         //    2) the battery on the device is low or even missing
 
-        Serial.println("RTC lost confidence in the DateTime!");
+        Serial.println("RTC lost confidence in the DateTime! Puta ");
 
         // following line sets the RTC to the date & time this sketch was compiled
         // it will also reset the valid flag internally unless the Rtc device is
@@ -118,7 +118,3 @@ void loop ()
 
 
 
-  display.println(F("OUIIII"));
-  display.println(F("nonnnn"));
-  display.display();
-}
