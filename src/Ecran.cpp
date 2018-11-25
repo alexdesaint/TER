@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <Ecran.hpp>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -15,11 +15,11 @@ RtcDS3231<TwoWire> Rtc(Wire);
 #define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#define countof(a) (sizeof(a) / sizeof(a[0]))
-
-void printDateTime(const RtcDateTime& dt)
-{
-    char datestring[20];
+void Ecran::test() {
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
 
     snprintf_P(datestring, 
             countof(datestring),
@@ -118,3 +118,7 @@ void loop ()
 
 
 
+  display.println(F("OUIIII"));
+  display.println(F("nonnnn"));
+  display.display();
+}
