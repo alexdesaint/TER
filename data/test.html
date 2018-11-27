@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <title>Line Chart</title>
+    <style>
+        body {
+            width: 595px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+
+    <script src="js/Chart.bundle.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jszip.min.js"></script>
+</head>
+
+<body>
+    <table style="width:100%">
+        <tr>
+            <th>Tentative</th>
+            <th>Tabeau de l'enregistrment</th>
+            <th>Graphique</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td></td>
+            <td><canvas id="myChart"></canvas></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Jackson</td>
+            <td>94</td>
+        </tr>
+    </table>
+</body>
+
+<script>
+
+    var labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    var data = [44, 48, 30, 22, 55, 66, 45, 22, 66, 10];
+
+    var sum = 0;
+    for (var i = 0; i < data.length; i++) {
+        sum += parseInt(data[i], 10);
+    }
+
+    var avg = sum / data.length;
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'temps de vol',
+                backgroundColor: 'rgb(255, 100, 0)',
+                borderColor: 'rgb(255, 100, 0)',
+                fill: false,
+                data: data
+            },
+            {
+                label: 'moyenne',
+                data: Array.apply(null, new Array(10)).map(Number.prototype.valueOf, avg),
+                fill: false,
+                radius: 0,
+                borderColor: "rgba(0,0,255, 0.5)",
+                backgroundColor: "rgba(0,0,255, 0.5)"
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            elements: {
+                line: {
+                    tension: 0
+                }
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'saut'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'temps en ms'
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+</html>
