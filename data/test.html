@@ -26,6 +26,67 @@
 </head>
 
 <body>
+    <div id="container"></div>
+</body>
+
+<script>
+    var data = [
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+        [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]
+    ];
+
+    function makeTableCode2(table) {
+        return `
+    <table style="width:100%">
+        <tr>
+            <th>saut</th>
+            <td>temps en ms</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <th>` + table[0] + `</th>
+        </tr>
+        <tr>
+            <th>2</th>
+            <th>` + table[1] + `</th>
+        </tr>
+        <tr>
+            <th>3</th>
+            <th>` + table[2] + `</th>
+        </tr>
+        <tr>
+            <th>4</th>
+            <th>` + table[3] + `</th>
+        </tr>
+        <tr>
+            <th>5</th>
+            <th>` + table[4] + `</th>
+        </tr>
+        <tr>
+            <th>6</th>
+            <th>` + table[5] + `</th>
+        </tr>
+        <tr>
+            <th>7</th>
+            <th>` + table[6] + `</th>
+        </tr>
+        <tr>
+            <th>8</th>
+            <th>` + table[7] + `</th>
+        </tr>
+        <tr>
+            <th>9</th>
+            <th>` + table[8] + `</th>
+        </tr>
+        <tr>
+            <th>10</th>
+            <th>` + table[9] + `</th>
+        </tr>
+    </table>
+    `
+    }
+
+    var code = `
     <table style="width:100%">
         <tr>
             <th>Tentative</th>
@@ -33,78 +94,84 @@
             <th>Graphique</th>
         </tr>
         <tr>
-            <td>1</td>
-            <td></td>
-            <td><canvas id="myChart"></canvas></td>
+            <td>1</td> 
+            <td>` + makeTableCode2(data[0]) + `</td>
+            <td><canvas id="chart1"></canvas></td>
         </tr>
         <tr>
             <td>2</td>
-            <td>Jackson</td>
+            <td>`+makeTableCode2(data[1]) + `</td>
             <td>94</td>
         </tr>
     </table>
-</body>
+    `;
 
-<script>
+    document.getElementById('container').insertAdjacentHTML('beforeend', code);
 
-    var labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    var data = [44, 48, 30, 22, 55, 66, 45, 22, 66, 10];
+    function makeSettings(dataa, avgg) {
+        return {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                datasets: [{
+                    label: 'temps de vol',
+                    backgroundColor: 'rgb(255, 100, 0)',
+                    borderColor: 'rgb(255, 100, 0)',
+                    fill: false,
+                    data: dataa
+                },
+                {
+                    label: 'moyenne',
+                    data: Array.apply(null, new Array(10)).map(Number.prototype.valueOf, avgg),
+                    fill: false,
+                    radius: 0,
+                    borderColor: "rgba(0,0,255, 0.5)",
+                    backgroundColor: "rgba(0,0,255, 0.5)"
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'saut'
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'temps en ms'
+                        }
+                    }]
+                }
+            }
+        }
+    }
+
+    var data = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
+
+    var avg = 10;
+    data = [44, 48, 30, 22, 55, 66, 45, 22, 66, 10];
 
     var sum = 0;
     for (var i = 0; i < data.length; i++) {
         sum += parseInt(data[i], 10);
     }
 
-    var avg = sum / data.length;
+    avg = sum / data.length;
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-
-        // The data for our dataset
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'temps de vol',
-                backgroundColor: 'rgb(255, 100, 0)',
-                borderColor: 'rgb(255, 100, 0)',
-                fill: false,
-                data: data
-            },
-            {
-                label: 'moyenne',
-                data: Array.apply(null, new Array(10)).map(Number.prototype.valueOf, avg),
-                fill: false,
-                radius: 0,
-                borderColor: "rgba(0,0,255, 0.5)",
-                backgroundColor: "rgba(0,0,255, 0.5)"
-            }]
-        },
-
-        // Configuration options go here
-        options: {
-            elements: {
-                line: {
-                    tension: 0
-                }
-            },
-            scales: {
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'saut'
-                    }
-                }],
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'temps en ms'
-                    }
-                }]
-            }
-        }
-    });
+    var ctx = document.getElementById('chart1').getContext('2d');
+    var chart = new Chart(ctx, makeSettings(data, avg));
 </script>
 
 </html>
