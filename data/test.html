@@ -31,80 +31,29 @@
 
 <script>
     var data = [
-        [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+        [10, 33, 55, 44, 10, 22, 10, 77, 55, 10],
         [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]
     ];
 
     function makeTableCode2(table) {
-        return `
-    <table style="width:100%">
-        <tr>
-            <th>saut</th>
-            <td>temps en ms</td>
-        </tr>
-        <tr>
-            <th>1</th>
-            <th>` + table[0] + `</th>
-        </tr>
-        <tr>
-            <th>2</th>
-            <th>` + table[1] + `</th>
-        </tr>
-        <tr>
-            <th>3</th>
-            <th>` + table[2] + `</th>
-        </tr>
-        <tr>
-            <th>4</th>
-            <th>` + table[3] + `</th>
-        </tr>
-        <tr>
-            <th>5</th>
-            <th>` + table[4] + `</th>
-        </tr>
-        <tr>
-            <th>6</th>
-            <th>` + table[5] + `</th>
-        </tr>
-        <tr>
-            <th>7</th>
-            <th>` + table[6] + `</th>
-        </tr>
-        <tr>
-            <th>8</th>
-            <th>` + table[7] + `</th>
-        </tr>
-        <tr>
-            <th>9</th>
-            <th>` + table[8] + `</th>
-        </tr>
-        <tr>
-            <th>10</th>
-            <th>` + table[9] + `</th>
-        </tr>
-    </table>
-    `
+        var ret = '<table style="width:100%"><tr><th>saut</th><th>temps en ms</th></tr>';
+
+        var i;
+        for (i = 0; i < 10; i++) {
+            ret += '<tr><td>' + (i + 1) + '</td><td>' + table[i] + '</td></tr>';
+        }
+        ret += '</table>';
+
+        return ret;
     }
 
-    var code = `
-    <table style="width:100%">
-        <tr>
-            <th>Tentative</th>
-            <th>Tabeau de l'enregistrment</th>
-            <th>Graphique</th>
-        </tr>
-        <tr>
-            <td>1</td> 
-            <td>` + makeTableCode2(data[0]) + `</td>
-            <td><canvas id="chart1"></canvas></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>`+makeTableCode2(data[1]) + `</td>
-            <td>94</td>
-        </tr>
-    </table>
-    `;
+    var code = '<table style = "width:100%"><tr><th>Tentative</th><th>Tabeau de l\'enregistrment</th><th>Graphique</th></tr>'
+    var i;
+    for (i = 0; i < 2; i++) {
+        code += '<tr><td>' + (i + 1) + '</td><td>' + makeTableCode2(data[i]) + '</td><td><canvas id="chart' + i + '"></canvas></td></tr>';
+    }
+
+    code += '</table>';
 
     document.getElementById('container').insertAdjacentHTML('beforeend', code);
 
@@ -158,20 +107,21 @@
         }
     }
 
-    var data = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
 
-    var avg = 10;
-    data = [44, 48, 30, 22, 55, 66, 45, 22, 66, 10];
+    for (var i = 0; i < 2; i++) {
 
-    var sum = 0;
-    for (var i = 0; i < data.length; i++) {
-        sum += parseInt(data[i], 10);
+        var avg = 10;
+
+        var sum = 0;
+        for (var j = 0; j < data.length; j++) {
+            sum += parseInt(data[i][j], 10);
+        }
+
+        avg = sum / 10;
+
+        var ctx = document.getElementById('chart' + i).getContext('2d');
+        var chart = new Chart(ctx, makeSettings(data[i], avg));
     }
-
-    avg = sum / data.length;
-
-    var ctx = document.getElementById('chart1').getContext('2d');
-    var chart = new Chart(ctx, makeSettings(data, avg));
 </script>
 
 </html>
