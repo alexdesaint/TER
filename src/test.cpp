@@ -29,3 +29,18 @@ void loop() {
 
 }
 #endif
+
+/******************************* test serveur *******************************/
+#ifdef testServeur
+
+#include "Serveur.hpp"
+
+void setup() {
+  Serveur s;
+  s.test();
+}
+
+void loop() {
+  s.useServeur();
+}
+#endif
