@@ -35,8 +35,10 @@ void loop() {
 
 #include "Serveur.hpp"
 
+Serveur s;
+
 void setup() {
-  Serveur s;
+  Serial.begin(9600);
   s.test();
 }
 
