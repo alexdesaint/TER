@@ -1,3 +1,3 @@
-const char *pageWeb = """"
-
-""""
+const char pageWeb[] = R"=====(
+OUIIIII
+)=====";

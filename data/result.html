@@ -1,45 +1,101 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-</head>
+<html>
 
 <body>
-    <script type="text/javascript" language="javascript" src="js/jquery-3.3.1.js"></script>
-    <script type="text/javascript" language="javascript" src="js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="js/dataTables.buttons.min.js"></script>
-    <script src="js/jszip.min.js"></script>
-    <script src="js/pdfmake.min.js"></script>
-    <script src="js/buttons.html5.min.js"></script>
-    <script class="init">
-        $(document).ready(function () {
-            $('#example').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'excelHtml5',
-                    'pdfHtml5'
-                ]
-            });
-        });
+
+    <canvas id="myCanvas" width="350" height="350" style="border:1px solid #d3d3d3;">
+        Your browser does not support the canvas element.
+    </canvas>
+
+    <script>
+
+        function line(c, x, y, a, b, epai, color) {
+            c.moveTo(x, 350 - y);
+            c.lineTo(a, 350 - b);
+            c.stroke();
+        }
+
+        function write(c, t, x, y) {
+            c.fillText(t, x, 350 - y);
+            ctx.stroke();
+        }
+
+        function writeVert(c, t, x, y) {
+            c.save();
+            c.rotate(-1.5707963267948966192313216916398);
+            c.fillText(t, y - 350, x);
+            c.restore();
+            c.stroke();
+        }
+
+        function point(c, x, y, marge, taille, n) {
+
+            var l = marge + x * (taille / 9);
+            var h = marge + y / 10 * (taille / (n));
+
+            c.beginPath();
+            c.arc(l, 350 - h, 3, 0, 2 * Math.PI, false);
+            c.fill();
+            c.lineWidth = 0;
+            c.strokeStyle = c.fillStyle;
+            c.stroke();
+        }
+
+
+        function lineGraph(c, x, y, a, b, marge, taille, n) {
+
+            var l = marge + x * (taille / 9);
+            var h = marge + y / 10 * (taille / (n));
+
+            c.moveTo(l, 350 - h);
+
+            var l = marge + a * (taille / 9);
+            var h = marge + b / 10 * (taille / (n));
+            c.lineTo(l, 350 - h);
+            c.stroke();
+        }
+
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.font = "12px Arial";
+        ctx.textAlign = "right";
+
+        marge = 50;
+        taille = 270;
+        n = 8;
+
+        ctx.textAlign = "right";
+
+        for (var i = 0; i <= n; i++) {
+            var l = marge + i * (taille / (n));
+            line(ctx, marge - 5, l, taille + marge, l);
+            write(ctx, i * 10, marge - 10, l - 5);
+        }
+
+        for (var i = 0; i < 10; i++) {
+            var l = marge + i * (taille / 9);
+            line(ctx, l, marge - 5, l, taille + marge);
+            write(ctx, i + 1, l + 3, marge - 17);
+        }
+
+        ctx.textAlign = "center";
+        write(ctx, "Saut", marge + taille / 2, marge - 30);
+        writeVert(ctx, "Temps en ms", marge - 30, marge + taille / 2);
+
+        var data = [10, 33, 55, 44, 10, 22, 10, 77, 55, 10];
+
+        c.fillStyle = 'rgb(255, 50, 0)';
+        ctx.lineWidth="5";
+
+        for (var i = 0; i < data.length; i++) {
+            point(ctx, i, data[i], marge, taille, n);
+            if (i > 0) {
+                lineGraph(ctx, i - 1, data[i - 1], i, data[i], marge, taille, n);
+            }
+        }
+
     </script>
 
-    <table id="example">
-        <thead>
-            <tr role="row">
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr role="row">
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-            </tr>
-        </tbody>
-    </table>
 </body>
 
 </html>
