@@ -111,3 +111,20 @@ void loop() {
 
 }
 #endif
+
+/******************************* test serveur *******************************/
+#ifdef testServeur
+
+#include "Serveur.hpp"
+
+Serveur s;
+
+void setup() {
+  Serial.begin(9600);
+  s.test();
+}
+
+void loop() {
+  s.useServeur();
+}
+#endif
