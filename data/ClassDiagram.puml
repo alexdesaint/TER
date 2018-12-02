@@ -1,0 +1,61 @@
+@startuml
+
+title Machine temps de vol - Diagramme de classe
+
+class Ecran { 
+    -adresse : uint8
+    +test()
+    +clear()
+    +write(string str)
+} 
+
+class HTMLgenerator { 
+    +getCode(list<array<uint32, 10>> temps) : string 
+}
+
+class WebServer {
+    -SSID : string
+    +WebServer(string SSID)
+    +modifyMeasurements(list<array<uint32, 10>> tabTemps)
+    +test()
+} 
+
+class ModeMesure{ 
+    -tabTemps : list<array<uint32, 10>>
+    -mesureCourante : array<uint32, 10>
+    __
+    +getTabTemps() : list<array<uint32, 10>>
+    +lancerMesure()
+    +presancePersonne() : bool
+    .. Note ..
+    presancePersonne() retourne un booléen pour indiquer la fin
+    de la mesure :
+    True - fin de la mesure
+    False - mesure en cours
+    ..
+    +absencePesonne()
+}
+
+class main {
+    -uint8 BoutonMode
+    -uint8 BoutonLancerChrono
+    -uint8 LEDCapteur
+    -uint8 CapteurLaser
+    --
+    +setup()
+    +loop()
+    ==
+    Programme principale.
+    Il interface les entrées sortie du système
+    avec les classes.
+}
+
+WebServer*--HTMLgenerator
+
+main*--Ecran
+main*--WebServer
+main*--ModeMesure
+
+hide main circle
+
+@enduml
