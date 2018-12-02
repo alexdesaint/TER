@@ -39,7 +39,7 @@ Serveur s;
 
 void setup() {
   Serial.begin(9600);
-  s.test();
+  s.InitServeur("tempsDeVol");
 }
 
 void loop() {
