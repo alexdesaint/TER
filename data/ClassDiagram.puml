@@ -41,6 +41,13 @@ class main {
     -uint8 BoutonLancerChrono
     -uint8 LEDCapteur
     -uint8 CapteurLaser
+    --
+    +setup()
+    +loop()
+    ==
+    Programme principale.
+    Il interface les entrées sortie du système
+    avec les classes.
 }
 
 WebServer*--HTMLgenerator
@@ -48,5 +55,7 @@ WebServer*--HTMLgenerator
 main*--Ecran
 main*--WebServer
 main*--ModeMesure
+
+hide main circle
 
 @enduml
