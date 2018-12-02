@@ -1,5 +1,87 @@
 #include <Arduino.h>
 
+
+/******************************* Test Chronometre *******************************/
+#ifdef testChrono
+#include "ModeMesure.hpp"
+#include <Wire.h>                               //We need the wire library for the I2C display
+#define OLED_RESET 4                            //display reset is on digital 4 but not used
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+bool capteursLaser , bouton ;
+ModeMesure modemesure ;
+bool boolBouton , boolCapteur ;
+
+int cpt , cpt2 ;
+
+int i ;
+
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Hello World!");
+  modemesure.init();
+  boolBouton = false ; 
+  boolCapteur= false ; 
+  cpt = 0 ;
+  cpt2 = 0 ;
+
+}
+
+void loop() {
+
+  if(bouton == true){
+    boolBouton= true ;
+  }
+
+  if(bouton == false && boolBouton == true){
+    boolBouton = modemesure.mode2(capteursLaser);
+
+  }
+
+  if(boolBouton == false){
+
+    modemesure.mode1(capteursLaser);
+  }
+
+
+
+
+
+// Simulation capteurs
+
+  delay(100);
+  cpt ++ ; 
+
+  if(cpt2 == 0)
+    bouton = true ;
+  else
+    bouton = false ;
+
+  if(cpt == 50)
+    cpt = 0 ;
+    cpt2 ++ ;
+
+  if(cpt2 == 15){
+    cpt2 = 0 ;
+  }
+
+  if(cpt == 20)
+    capteursLaser = true ;
+
+  if(cpt == 35)
+     capteursLaser = false ;
+
+// en milliseconde 
+  i = (int) modemesure.lectureTemps();
+  
+  Serial.println(i);
+
+}
+
+#endif
+
 /******************************* test Serial *******************************/
 #ifdef testSerial
 
