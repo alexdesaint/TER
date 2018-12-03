@@ -128,3 +128,34 @@ void loop() {
   s.useServeur();
 }
 #endif
+
+/*********************** test maraboutage*************************/
+#ifdef testEcran
+
+#include <Wire.h>        // Only needed for Arduino 1.6.5 and earlier
+#include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
+#include "Ecran.hpp"
+
+Ecran e;
+void setup()
+{
+  Serial.begin(9600);
+  e.init();
+  e.scanI2C();
+}
+
+void loop()
+{
+  // clear ecran
+  e.clear();
+
+  // test de l'ecran
+  e.test();
+  delay(5000); // attente de 5sec
+
+  // ecriture du string
+  e.clear();
+  e.write("alex t moch");
+  delay(5000);
+}
+#endif
