@@ -1,19 +1,21 @@
 #include "Serveur.hpp"
-#include "pageWeb.hpp"
+#include <WiFiManager.h>
 
 ESP8266WebServer server(80);   //instantiate server at port 80 (http port)
+String page;
 
 void handleNotFound(){
   server.sendHeader("Location", "/", true);
-  server.send (200, "text/html", MAIN_page);
+  server.send (200, "text/html", page);
 }
  
-void handleRoot() {
-  server.send(200, "text/html", MAIN_page);
+void handleRoot(){
+  server.send(200, "text/html", page);
 }
 
 void Serveur::InitServeur(String id) {
   ssid = &id[0];
+  page = MAIN_page_vide;
 
   IPAddress apIP(192, 168, 4, 1);
   IPAddress netMsk(255, 255, 255, 0);
@@ -40,10 +42,18 @@ void Serveur::InitServeur(String id) {
 
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "*", WiFi.softAPIP()); //Redirect research to the web page
+
+  page = MAIN_page_vide; //on commence par une page blanche
+}
+
+void Serveur::modifyMeasurements(std::list<std::array<uint32_t, 10>> temps) {
+  HTMLgenerator htmlCode = HTMLgenerator();
+  std::string str = htmlCode.getCode(temps);
+  const char *cstr = str.c_str();
+  page = String(cstr);
 }
 
 void Serveur::useServeur() {
   dnsServer.processNextRequest();
   server.handleClient();
-  
 }

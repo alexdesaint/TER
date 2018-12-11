@@ -122,12 +122,14 @@ Serveur s;
 void setup() {
   Serial.begin(9600);
   s.InitServeur("tempsDeVol");
+  s.modifyMeasurements() ;
 }
 
 void loop() {
   s.useServeur();
 }
 #endif
+
 
 /*********************** test maraboutage*************************/
 #ifdef testEcran
@@ -157,5 +159,21 @@ void loop()
   e.clear();
   e.write("alex t moch");
   delay(5000);
+}
+#endif
+
+/******************************* test capteur *******************************/
+#ifdef testCapteur
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(D0,INPUT);
+}
+
+void loop() {
+  int capt = digitalRead(D0);
+  if(capt>0) Serial.println("capteur change");
+  else Serial.println("\n");
 }
 #endif
