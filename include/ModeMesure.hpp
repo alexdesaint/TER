@@ -17,6 +17,8 @@ private:
 
   bool boolPresencePersonne = false ;
   bool boolBouton = false ; 
+  bool boolLancerMesure = false ; 
+  bool boolEntrainDeMesurer = false ;
 
 
   std::array<uint64_t, 10> tabTemps ;
@@ -26,16 +28,18 @@ private:
 public:
   uint64_t lectureTemps();
   void init();
-
-  void mode1();
-  // On return un boolean pour savoir si on est encore entrain de traité ou on peut passer au mode 1
-  bool mode2();
+  std::array<uint64_t, 10> getTabTemps() ;
 
   void absencePersonne();
   bool presencePersonne();
 
   void presenceBouton();
-  void absenceBouton();
+
+  void lancerMesure();
+
+  int getIndice();
+
+  void cleanTab();
 
 
 

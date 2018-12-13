@@ -1,6 +1,8 @@
 #include "ModeMesure.hpp"
 #include <SPI.h>
 #include <Wire.h>
+#include <Adafruit_GFX.h>
+
 
 void ModeMesure::init(){
 this->indiceTabTemps = 0 ;
@@ -10,78 +12,34 @@ this->boolMode2 = false ;
 
 }
 
+int ModeMesure::getIndice(){
+
+    return this->indiceTabTemps ;
+}
+
 uint64_t ModeMesure::lectureTemps(){
     return this->time_us / 1000;
 }
 
-void ModeMesure::mode1(bool capteurLaser){
-    if(boolMode1 = false){
-    this->timestart = micros();
-    this->timePauseStart = micros();
-    this->timePauseEnd = micros();
-    this->timefinished = micros();
-    this->boolMode1 = true ;
-    this->boolMode2 = false ;
-    this->time_us = 0;
 
-    }
-
-
-    if(capteurLaser == true){
-        this->boolPause = true; 
-        // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas appuyer dans le bouton quand on est dans cette
-        // situation la 
-        this->timestart = micros();
-        this->timePauseStart = micros();
-        this->timePauseEnd = micros();
-        this->timefinished = micros();
-        this->time_us = 0;
-
-    }
-
-    if((capteurLaser == false) && (this->boolPause == true)){
+void ModeMesure::absencePersonne(){
+    boolPresencePersonne = false ;
+    if((boolPresencePersonne == false) && (this->boolPause == true) && (this->boolLancerMesure == false)){
         this->boolPause = false;
         // On remet tout a 0 et si on appui dans le bouton on passe au mode 2 avec ces initialization
         this->timestart = micros();
         this->timePauseStart = micros();
         this->timePauseEnd = micros();
         this->timefinished = micros();
+        this->totalTempsPause = 0 ;
         this->time_us = 0;
+        this->indiceTabTemps = 0 ;
+
     }
 
-    
-}
-
-bool ModeMesure::mode2(bool capteurLaser){
-// Init du mode2 seulement ce fait une foit quand on rentre
-    if(boolMode2 = false){
-    this->totalTempsPause= 0 ;
-   // this->timestart = micros();
-    //this->timePauseStart = micros();
-    //this->timePauseEnd = micros();
-    //this->timefinished = micros();
-    this->boolMode2 = true ;
-    this->boolMode1 = false ;
-    this->indiceTabTemps = 0 ;
-    }
-
-if( this->indiceTabTemps < 10 ){
-    // On detecte qu'on a touché le trampolin on lance le timer pour le temps de pause
-        if(capteurLaser == true && this->boolPause == false){
-            this->boolPause = true; 
-            this->timePauseStart = micros();
-            this->timefinished = micros();
-
-            // On calcule le temps de vols de chaque figure et on la stock dans un tableau
-            tabTemps[this->indiceTabTemps] = (this->timefinished - this->timePauseEnd) ;
-            this->indiceTabTemps ++ ;
-
-            // On compte le temps de vol total
-            this->time_us =  (this->timefinished - this->timestart) - totalTempsPause ;
-        }
-
+if( this->indiceTabTemps < 10 && boolLancerMesure == true ){
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
-        if((capteurLaser == false) && (this->boolPause == true)){
+        if((boolPresencePersonne == false) && (this->boolPause == true) && (boolLancerMesure == true) ){
             this->boolPause = false;
             this->timePauseEnd = micros();
 
@@ -90,16 +48,110 @@ if( this->indiceTabTemps < 10 ){
         
         }
 
-    return true ;
-
-
+     this->boolLancerMesure = true ;
 }
 else
-    return false ;
+   this->boolLancerMesure = false ;
+
+
 
 
 }
 
+bool ModeMesure::presencePersonne(){
+    this->boolPresencePersonne = true ;
+    int mode ;
+
+    if((boolMode1 = false) && (this->boolLancerMesure == false )){
+        this->timestart = micros();
+        this->timePauseStart = micros();
+        this->timePauseEnd = micros();
+        this->timefinished = micros();
+        this->totalTempsPause = 0 ;
+        this->boolMode1 = true ;
+        this->boolMode2 = false ;
+        this->time_us = 0;
+        this->indiceTabTemps = 0 ;
+        mode = 1 ;
+        Serial.println("mode 1");
+
+
+
+    }
+
+    // Init du mode2 seulement ce fait une foit quand on rentre
+    if( (boolMode2 = false) && (boolLancerMesure == true )){
+        this->totalTempsPause= 0 ;
+        // this->timestart = micros();
+        //this->timePauseStart = micros();
+        //this->timePauseEnd = micros();
+        //this->timefinished = micros();
+        this->boolMode2 = true ;
+        this->boolMode1 = false ;
+        this->indiceTabTemps = 0 ;
+        mode = 2 ;
+        Serial.println("mode 2");
+
+    }
+
+    if((boolPresencePersonne == true) && (this->boolLancerMesure == false)){
+        this->boolPause = true; 
+        // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas appuyer dans le bouton quand on est dans cette
+        // situation la 
+        this->timestart = micros();
+        this->timePauseStart = micros();
+        this->timePauseEnd = micros();
+        this->timefinished = micros();
+        this->time_us = 0;
+    }
+
+
+
+    if( this->indiceTabTemps < 10 && boolLancerMesure == true ){
+    // On detecte qu'on a touché le trampolin on lance le timer pour le temps de pause
+        if(boolPresencePersonne == true && this->boolPause == false && boolLancerMesure == true ){
+            this->boolPause = true; 
+            this->timePauseStart = micros();
+            this->timefinished = micros();
+
+            // On calcule le temps de vols de chaque figure et on la stock dans un tableau
+            tabTemps[this->indiceTabTemps] = (this->timefinished - this->timePauseEnd)/1000 ;
+            this->indiceTabTemps ++ ;
+
+            // On compte le temps de vol total
+            this->time_us =  (this->timefinished - this->timestart) - this->totalTempsPause ;
+        }
+        this->boolEntrainDeMesurer = true ;
+
+    }
+    else{
+        this->boolEntrainDeMesurer = false ;
+        this->boolLancerMesure = false ;
+        //this->indiceTabTemps=0 ;
+    }
+
+return this->boolEntrainDeMesurer ; 
+
+}
+
+
+
+
+std::array<uint64_t, 10> ModeMesure::getTabTemps(){
+
+    return this->tabTemps ;
+}
+
+
+void ModeMesure::lancerMesure(){
+    this->boolLancerMesure = true ;
+
+}
+
+void ModeMesure::cleanTab(){
+    for(int i = 0 ; i < 10 ; i++)
+        this->tabTemps[i] = 0 ;
+}
 
 
 

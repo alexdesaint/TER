@@ -6,10 +6,11 @@
 #include "ModeMesure.hpp"
 #include <Wire.h>                               //We need the wire library for the I2C display
 #define OLED_RESET 4                            //display reset is on digital 4 but not used
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 
-bool capteursLaser , bouton ;
+#include <cinttypes>
+#include <array>
+
+bool capteurLaser , bouton ;
 ModeMesure modemesure ;
 bool boolBouton , boolCapteur ;
 
@@ -26,30 +27,62 @@ void setup() {
   boolCapteur= false ; 
   cpt = 0 ;
   cpt2 = 0 ;
+  pinMode(D6,INPUT);
+  pinMode(D8,INPUT);
 
 }
 
 void loop() {
 
+
   if(bouton == true){
-    boolBouton= true ;
+    modemesure.lancerMesure();
   }
 
-  if(bouton == false && boolBouton == true){
-    boolBouton = modemesure.mode2(capteursLaser);
+  if(capteurLaser == true ){
+    boolBouton =modemesure.presencePersonne();
 
   }
 
-  if(boolBouton == false){
+  if(capteurLaser == false){
 
-    modemesure.mode1(capteursLaser);
+    modemesure.absencePersonne();
   }
+  //Detection bouton pour capt1 et detection presence personne capt2
+  int capt1 = digitalRead(D6);
+  int capt2 = digitalRead(D8);
+  if(capt1>0) 
+    bouton=true ;
+  else 
+    bouton = false ;
+  if(capt2>0) 
+  {
+    capteurLaser = true ;
+    std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+
+    // Test de la fonction getTabtemps en parcourant tout le tableau
+    for(int i=0 ; i < modemesure.getIndice() ; i++){
+    
+      int p = (int) tab[i];
+      Serial.println(p);
+
+
+      // Test de la fonction clean tab ; A tester apres avoir recuperer le tableau
+      /*if(i == 7){
+        modemesure.cleanTab();
+      }*/
+
+    }
+
+  }
+  else 
+    capteurLaser = false ;
 
 
 
 
 
-// Simulation capteurs
+/*// Simulation capteurs
 
   delay(100);
   cpt ++ ; 
@@ -72,11 +105,13 @@ void loop() {
 
   if(cpt == 35)
      capteursLaser = false ;
+*/
 
-// en milliseconde 
-  i = (int) modemesure.lectureTemps();
-  
-  Serial.println(i);
+// en milliseconde Affichage du temps total
+  //i = (int) modemesure.lectureTemps();
+  //Serial.println(i);
+
+
 
 }
 
@@ -168,12 +203,17 @@ void loop()
 
 void setup() {
   Serial.begin(9600);
-  pinMode(D0,INPUT);
+  pinMode(D6,INPUT);
+  pinMode(D8,INPUT);
 }
 
 void loop() {
-  int capt = digitalRead(D0);
-  if(capt>0) Serial.println("capteur change");
+  int capt1 = digitalRead(D6);
+  int capt2 = digitalRead(D8);
+  if(capt1>0) Serial.println("D6");
   else Serial.println("\n");
+  if(capt2>0) Serial.println("D8");
+  else Serial.println("\n");
+
 }
 #endif
