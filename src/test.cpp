@@ -68,9 +68,9 @@ void loop() {
 
 
       // Test de la fonction clean tab ; A tester apres avoir recuperer le tableau
-      /*if(i == 7){
+      if(i == 7){
         modemesure.cleanTab();
-      }*/
+      }
 
     }
 
@@ -216,4 +216,336 @@ void loop() {
   else Serial.println("\n");
 
 }
+#endif
+
+/******************************* test integration façon machine a etat 1 *******************************/
+//le chrono devant fonctionner en continu, ça marche pas
+#ifdef testIntegration1
+
+//serveur
+#include "Serveur.hpp"
+Serveur s;
+
+//chrono
+#include "ModeMesure.hpp"
+#include <Wire.h>                               //We need the wire library for the I2C display
+#define OLED_RESET 4                            //display reset is on digital 4 but not used
+
+#include <cinttypes>
+#include <array>
+
+bool capteurLaser , bouton ;
+ModeMesure modemesure ;
+
+//a quoi sert ses 2 variable?
+bool boolBouton , boolCapteur ;
+
+int capt1 , capt2 ;
+
+int i ;
+
+//machine a etat
+int etat = 0;
+
+//variable front laser
+//bool capteurLaserPrec;
+//int compteurFront;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Hello World!\n");
+
+  s.InitServeur("tempsDeVol");
+
+  modemesure.init();
+  boolBouton = false ; 
+  boolCapteur= false ; 
+  capt1 = 0 ;
+  capt2 = 0 ;
+  pinMode(D6,INPUT);
+  pinMode(D8,INPUT);
+}
+
+void loop() {
+
+  switch (etat) {
+  case 0:
+    s.useServeur();
+
+    //detection capteur façon momo
+    /*if(digitalRead(D6)>0) 
+      bouton=true ;
+    else 
+      bouton = false ;
+
+    if(bouton == true){*/
+    if(digitalRead(D6)>0){
+      etat=1;
+      //capteurLaserPrec = false;
+      //compteurFront=0;
+    }
+    break;
+
+  case 1:
+
+    //Detection bouton pour capt1 et detection presence personne capt2
+    capt1 = digitalRead(D6);
+    capt2 = digitalRead(D8);
+    if(capt1>0) 
+      bouton=true ;
+    else 
+      bouton = false ;
+
+    if(capt2>0) 
+    {
+      capteurLaser = true ;
+      //Serial.println(modemesure.getIndice());
+
+      if(modemesure.getIndice()>=10){ //nbr de saut
+
+        std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+
+        for(int i=0 ; i < modemesure.getIndice() ; i++){
+          int p = (int) tab[i];
+          Serial.println(p);
+        }
+
+        Serial.println("\n");
+        //s.modifyMeasurements(tab);
+        modemesure.cleanTab();
+
+        etat = 0;
+      }
+    }
+    else
+      capteurLaser = false ;
+
+
+    if(bouton == true){
+      modemesure.lancerMesure();
+    }
+
+    if(capteurLaser == true ){
+      boolBouton =modemesure.presencePersonne();
+    }
+
+    if(capteurLaser == false){
+      modemesure.absencePersonne();
+    }
+
+
+    //partie front mais on ne va pas l'utiliser et garder la partie de momo sans
+    //je laisse ça ici si on compte faire des modif
+
+    /*if(capteurLaser!=capteurLaserPrec && capteurLaser==true){
+      compteurFront = compteurFront+1;
+      Serial.println(compteurFront);
+
+      if(compteurFront>=11){ //nbr de saut
+        std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+
+      // Test de la fonction getTabtemps en parcourant tout le tableau
+        for(int i=0 ; i < modemesure.getIndice() ; i++){
+          int p = (int) tab[i];
+          Serial.println(p);
+        }
+        //s.modifyMeasurements(tab);
+        modemesure.cleanTab();
+
+        etat=0;
+      }
+    }
+    capteurLaserPrec = capteurLaser;*/
+    break;
+    
+  default:
+    // statements
+    Serial.println("error");
+    break;
+  }
+  
+}
+#endif
+
+/******************************* test integration tout d'affilé 2 *******************************/
+#ifdef testIntegration2
+
+//serveur
+#include "Serveur.hpp"
+Serveur s;
+
+//chrono
+#include "ModeMesure.hpp"
+#include <Wire.h>                               //We need the wire library for the I2C display
+#define OLED_RESET 4                            //display reset is on digital 4 but not used
+
+#include <cinttypes>
+#include <array>
+
+bool capteurLaser , bouton ;
+ModeMesure modemesure ;
+
+//a quoi sert ses 2 variable?
+bool boolBouton , boolCapteur ;
+
+int capt1 , capt2 ;
+
+int i ;
+
+//variable sortie laser
+bool envoieDonnee;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Hello World!\n");
+
+  s.InitServeur("tempsDeVol");
+
+  modemesure.init();
+  boolBouton = false ; 
+  boolCapteur= false ; 
+  capt1 = 0 ;
+  capt2 = 0 ;
+  pinMode(D6,INPUT);
+  pinMode(D8,INPUT);
+
+  envoieDonnee = false;
+
+}
+
+void loop() {
+
+  s.useServeur();
+
+  //Detection bouton pour capt1 et detection presence personne capt2
+  capt1 = digitalRead(D6);
+  capt2 = digitalRead(D8);
+  if(capt1>0) 
+    bouton=true ;
+  else 
+    bouton = false ;
+
+  if(capt2>0) 
+  {
+    capteurLaser = true ;
+    //Serial.println(modemesure.getIndice());
+
+    if(modemesure.getIndice()>=10 && envoieDonnee==false){ //nbr de saut
+
+      std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+
+      for(int i=0 ; i < modemesure.getIndice() ; i++){
+        int p = (int) tab[i];
+        Serial.println(p);
+      }
+
+      Serial.println("\n");
+      //s.modifyMeasurements(tab);
+      modemesure.cleanTab();
+
+      envoieDonnee = true;
+    }
+  }
+  else
+    capteurLaser = false ;
+
+  if(bouton == true && envoieDonnee==true){
+    envoieDonnee=false;
+  }
+
+  if(bouton == true){
+    modemesure.lancerMesure();
+  }
+
+  if(capteurLaser == true ){
+    boolBouton =modemesure.presencePersonne();
+  }
+
+  if(capteurLaser == false){
+    modemesure.absencePersonne();
+  }
+  
+}
+#endif
+
+/******************************* Test Chronometre avec front *******************************/
+#ifdef testChronoFront
+#include "ModeMesure.hpp"
+#include <Wire.h>                               //We need the wire library for the I2C display
+#define OLED_RESET 4                            //display reset is on digital 4 but not used
+
+#include <cinttypes>
+#include <array>
+
+bool capteurLaser , bouton ;
+ModeMesure modemesure ;
+
+//a quoi sert ses 4 variable?
+bool boolBouton , boolCapteur ;
+int cpt , cpt2;
+
+int i ;
+
+//variable front 
+bool capteurLaserPrec , boutonPrec ;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Hello World!");
+  modemesure.init();
+  boolBouton = false ; 
+  boolCapteur= false ; 
+  cpt = 0 ;
+  cpt2 = 0 ;
+  pinMode(D6,INPUT);
+  pinMode(D8,INPUT);
+
+  capteurLaserPrec = false;
+  boutonPrec = false;
+
+}
+
+void loop() {
+
+  //Detection bouton pour capt1 et detection presence personne capt2
+  int capt1 = digitalRead(D6);
+  int capt2 = digitalRead(D8);
+
+  if(capt1>0) 
+    bouton=true ;
+  else 
+    bouton = false ;
+
+  if(capt2>0) 
+    capteurLaser = true ;
+  else 
+    capteurLaser = false ;
+
+  //front montant du capteur
+  if(capteurLaserPrec!=capteurLaser && capteurLaser==true){
+
+  }
+
+  //front descendant du capteur
+  if(capteurLaserPrec!=capteurLaser && capteurLaser==false){
+
+  }
+
+  //front montant du bouton
+  if(boutonPrec!=bouton && bouton==true){
+
+  }
+
+  //front descendant du bouton
+  if(boutonPrec!=bouton && bouton==false){
+
+  }
+
+
+
+
+  capteurLaserPrec = capteurLaser;
+  boutonPrec = bouton;
+}
+
 #endif

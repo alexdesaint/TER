@@ -21,7 +21,7 @@ void Serveur::InitServeur(String id) {
   IPAddress netMsk(255, 255, 255, 0);
 
   delay(1000);
-  Serial.begin(115200);
+  //Serial.begin(115200);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, netMsk);
   WiFi.softAP(ssid); //begin WiFi access point
