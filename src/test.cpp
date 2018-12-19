@@ -392,8 +392,10 @@ int capt1 , capt2 ;
 
 int i ;
 
-//variable sortie laser
-bool envoieDonnee;
+//variable supp de test
+bool chronoEnCour;
+std::list<std::array<uint32_t, 10>> tableauChrono;
+
 
 void setup() {
   Serial.begin(9600);
@@ -409,17 +411,21 @@ void setup() {
   pinMode(D6,INPUT);
   pinMode(D8,INPUT);
 
-  envoieDonnee = false;
+  chronoEnCour = false;
+
+  tableauChrono.clear();
 
 }
 
 void loop() {
 
-  s.useServeur();
+  if(!chronoEnCour) 
+    s.useServeur();
 
   //Detection bouton pour capt1 et detection presence personne capt2
   capt1 = digitalRead(D6);
   capt2 = digitalRead(D8);
+
   if(capt1>0) 
     bouton=true ;
   else 
@@ -430,9 +436,9 @@ void loop() {
     capteurLaser = true ;
     //Serial.println(modemesure.getIndice());
 
-    if(modemesure.getIndice()>=10 && envoieDonnee==false){ //nbr de saut
+    if(modemesure.getIndice()>=10 && chronoEnCour){ //nbr de saut
 
-      std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+      std::array<uint32_t, 10> tab = modemesure.getTabTemps();
 
       for(int i=0 ; i < modemesure.getIndice() ; i++){
         int p = (int) tab[i];
@@ -440,21 +446,19 @@ void loop() {
       }
 
       Serial.println("\n");
-      //s.modifyMeasurements(tab);
+      tableauChrono.push_back(tab);
+      s.modifyMeasurements(tableauChrono);
       modemesure.cleanTab();
 
-      envoieDonnee = true;
+      chronoEnCour = false;
     }
   }
   else
     capteurLaser = false ;
 
-  if(bouton == true && envoieDonnee==true){
-    envoieDonnee=false;
-  }
-
   if(bouton == true){
     modemesure.lancerMesure();
+    chronoEnCour=true;
   }
 
   if(capteurLaser == true ){

@@ -21,10 +21,10 @@ class WebServer {
 } 
 
 class ModeMesure{ 
-    -tabTemps : list<array<uint32, 10>>
+    -tabTemps : array<uint32, 10>
     -mesureCourante : array<uint32, 10>
     __
-    +getTabTemps() : list<array<uint32, 10>>
+    +getTabTemps() : array<uint32, 10>
     +lancerMesure()
     +presancePersonne() : bool
     .. Note ..

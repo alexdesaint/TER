@@ -21,14 +21,16 @@ private:
   bool boolEntrainDeMesurer = false ;
 
 
-  std::array<uint64_t, 10> tabTemps ;
+  //std::array<uint64_t, 10> tabTemps ;
+  std::array<uint32_t, 10> tabTemps ;
   int indiceTabTemps;
 
 
 public:
   uint64_t lectureTemps();
   void init();
-  std::array<uint64_t, 10> getTabTemps() ;
+  //std::array<uint64_t, 10> getTabTemps() ;
+  std::array<uint32_t, 10> getTabTemps() ;
 
   void absencePersonne();
   bool presencePersonne();

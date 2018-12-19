@@ -137,7 +137,8 @@ return this->boolEntrainDeMesurer ;
 
 
 
-std::array<uint64_t, 10> ModeMesure::getTabTemps(){
+//std::array<uint64_t, 10> ModeMesure::getTabTemps(){
+std::array<uint32_t, 10> ModeMesure::getTabTemps(){
 
     return this->tabTemps ;
 }

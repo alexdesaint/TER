@@ -44,6 +44,7 @@ void Serveur::InitServeur(String id) {
   dnsServer.start(DNS_PORT, "*", WiFi.softAPIP()); //Redirect research to the web page
 
   page = MAIN_page_vide; //on commence par une page blanche
+
 }
 
 void Serveur::modifyMeasurements(std::list<std::array<uint32_t, 10>> temps) {
