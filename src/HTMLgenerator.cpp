@@ -10,8 +10,7 @@ const char foot[] = R"=====(
 
 const char dataExample[] = "data=[ [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10], [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]]";
 
-std::string HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps)
-{
+std::string HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps) {
     std::string ret(header);
 
     std::string data("data=[");
@@ -39,7 +38,8 @@ std::string HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps)
 
     data.append("]");
 
-    ret.append(dataExample);
+    //ret.append(dataExample);
+    ret.append(data);
     ret.append(foot);
 
     return ret;
