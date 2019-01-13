@@ -58,7 +58,7 @@ void loop() {
   if(capt2>0) 
   {
     capteurLaser = true ;
-    std::array<uint64_t, 10> tab = modemesure.getTabTemps();
+    std::array<uint32_t, 10> tab = modemesure.getTabTemps();
 
     // Test de la fonction getTabtemps en parcourant tout le tableau
     for(int i=0 ; i < modemesure.getIndice() ; i++){
@@ -155,9 +155,11 @@ void loop() {
 Serveur s;
 
 void setup() {
+  std::list<std::array<uint32_t, 10>> dataTest = { {10, 10, 10, 10, 10, 70, 70, 70, 70, 70} };
+
   Serial.begin(9600);
   s.InitServeur("tempsDeVol");
-  s.modifyMeasurements() ;
+  s.modifyMeasurements(dataTest) ;
 }
 
 void loop() {
@@ -431,7 +433,7 @@ void loop() {
   else 
     bouton = false ;
 
-  if(capt2>0) 
+  if(capt2==0) 
   {
     capteurLaser = true ;
     //Serial.println(modemesure.getIndice());
