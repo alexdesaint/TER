@@ -114,9 +114,12 @@ bool ModeMesure::presencePersonne(){
             this->timePauseStart = micros();
             this->timefinished = micros();
 
-            // On calcule le temps de vols de chaque figure et on la stock dans un tableau
-            tabTemps[this->indiceTabTemps] = (this->timefinished - this->timePauseEnd)/1000 ;
-            this->indiceTabTemps ++ ;
+            //Code anti rebond avec un seuil
+            if( ((this->timefinished - this->timePauseEnd)/1000) > this->seuilRebond ){
+                // On calcule le temps de vols de chaque figure et on la stock dans un tableau
+                tabTemps[this->indiceTabTemps] = (this->timefinished - this->timePauseEnd)/1000 ;
+                this->indiceTabTemps ++ ;
+            }
 
             // On compte le temps de vol total
             this->time_us =  (this->timefinished - this->timestart) - this->totalTempsPause ;
@@ -137,8 +140,7 @@ return this->boolEntrainDeMesurer ;
 
 
 
-//std::array<uint64_t, 10> ModeMesure::getTabTemps(){
-std::array<uint32_t, 10> ModeMesure::getTabTemps(){
+std::array<uint64_t, 10> ModeMesure::getTabTemps(){
 
     return this->tabTemps ;
 }

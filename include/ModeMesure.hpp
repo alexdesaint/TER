@@ -6,6 +6,8 @@
 
 class ModeMesure {
 private:
+  //Seuil pour le rebond
+  uint64_t seuilRebond = 0.1 ;
   // TIme start ,finished et total serve pour calculer le temps de vols
   uint64_t timestart, timefinished,  timetotal ;
   // TimePauseStart and end sont les temps pendant que on est entrain de toucher le trampolin
