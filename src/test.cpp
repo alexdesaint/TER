@@ -169,7 +169,7 @@ void loop() {
 
 
 /*********************** test maraboutage*************************/
-#ifdef testEcran
+#ifdef testEcran2
 
 #include <Wire.h>        // Only needed for Arduino 1.6.5 and earlier
 #include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
@@ -185,6 +185,8 @@ void setup()
 
 void loop()
 {
+  e.init();
+  e.scanI2C();
   // clear ecran
   e.clear();
 
@@ -384,7 +386,7 @@ Serveur s;
 #include <cinttypes>
 #include <array>
 
-bool capteurLaser , bouton ;
+bool capteurLaser , bouton , boolCapteurLaserFront ;
 ModeMesure modemesure ;
 
 //a quoi sert ses 2 variable?
@@ -408,10 +410,13 @@ void setup() {
   modemesure.init();
   boolBouton = false ; 
   boolCapteur= false ; 
+  boolCapteurLaserFront = false ;
+
   capt1 = 0 ;
   capt2 = 0 ;
   pinMode(D6,INPUT);
   pinMode(D8,INPUT);
+  pinMode(D0, OUTPUT);
 
   chronoEnCour = false;
 
@@ -435,6 +440,8 @@ void loop() {
 
   if(capt2==0) 
   {
+    //Serial.println("Partie capt2 test");
+
     capteurLaser = true ;
     //Serial.println(modemesure.getIndice());
 
@@ -461,15 +468,31 @@ void loop() {
   if(bouton == true){
     modemesure.lancerMesure();
     chronoEnCour=true;
+    //Serial.println("Partie Bouton");
   }
 
-  if(capteurLaser == true ){
+  if((capteurLaser == true) && (boolCapteurLaserFront == false ) ){
+    boolCapteurLaserFront = true ;
     boolBouton =modemesure.presencePersonne();
+    //Serial.println("Partie BoolCapteurLaserFront presence personne");
+
   }
 
-  if(capteurLaser == false){
+  if( (capteurLaser == false ) && (boolCapteurLaserFront == true)){
+    boolCapteurLaserFront = false; 
     modemesure.absencePersonne();
+    //Serial.println("Partie BoolCapteurLaserFront absence personne");
+
   }
+
+
+// Pour LA LED
+  if(boolCapteurLaserFront==true)
+    digitalWrite(D0, HIGH);
+  else
+    digitalWrite(D0, LOW);
+
+
   
 }
 #endif

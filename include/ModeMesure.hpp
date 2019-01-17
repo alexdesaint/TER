@@ -7,13 +7,13 @@
 class ModeMesure {
 private:
   //Seuil pour le rebond
-  uint64_t seuilRebond = 0.1 ;
+  uint32_t seuilRebond = 100 ;
   // TIme start ,finished et total serve pour calculer le temps de vols
-  uint64_t timestart, timefinished,  timetotal ;
+  uint32_t timestart, timefinished,  timetotal ;
   // TimePauseStart and end sont les temps pendant que on est entrain de toucher le trampolin
-  uint64_t timePauseStart , timePauseEnd ;
+  uint32_t timePauseStart , timePauseEnd ;
   // Le temps de vol
-  uint64_t time_us , totalTempsPause;
+  uint32_t time_us , totalTempsPause;
   // Bool pause , mode 1 et mode 2 sont les boolean qui servent a savoir si on est respectivement dans la pause , mode 1 ou mode 2
   bool boolPause , boolMode1 , boolMode2; 
 
@@ -29,7 +29,7 @@ private:
 
 
 public:
-  uint64_t lectureTemps();
+  uint32_t lectureTemps();
   void init();
   //std::array<uint64_t, 10> getTabTemps() ;
   std::array<uint32_t, 10> getTabTemps() ;
@@ -47,7 +47,7 @@ public:
 
 
 
-  uint64_t getTime();
+  uint32_t getTime();
 };
 
 #endif /* end of include guard:ModeMesure_hpp */

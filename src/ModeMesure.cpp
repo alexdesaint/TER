@@ -17,7 +17,7 @@ int ModeMesure::getIndice(){
     return this->indiceTabTemps ;
 }
 
-uint64_t ModeMesure::lectureTemps(){
+uint32_t ModeMesure::lectureTemps(){
     return this->time_us / 1000;
 }
 
@@ -117,8 +117,9 @@ bool ModeMesure::presencePersonne(){
             //Code anti rebond avec un seuil
             if( ((this->timefinished - this->timePauseEnd)/1000) > this->seuilRebond ){
                 // On calcule le temps de vols de chaque figure et on la stock dans un tableau
-                tabTemps[this->indiceTabTemps] = (this->timefinished - this->timePauseEnd)/1000 ;
+                tabTemps[this->indiceTabTemps] = (uint32_t) (this->timefinished - this->timePauseEnd)/1000 ;
                 this->indiceTabTemps ++ ;
+                Serial.println( (uint32_t) (this->timefinished - this->timePauseEnd)/1000);
             }
 
             // On compte le temps de vol total
@@ -140,7 +141,7 @@ return this->boolEntrainDeMesurer ;
 
 
 
-std::array<uint64_t, 10> ModeMesure::getTabTemps(){
+std::array<uint32_t, 10> ModeMesure::getTabTemps(){
 
     return this->tabTemps ;
 }
