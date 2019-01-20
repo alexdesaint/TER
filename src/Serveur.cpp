@@ -15,7 +15,7 @@ void handleRoot(){
 
 void Serveur::InitServeur(String id) {
   ssid = &id[0];
-  page = MAIN_page_vide;
+  //page = MAIN_page_vide;
 
   IPAddress apIP(192, 168, 4, 1);
   IPAddress netMsk(255, 255, 255, 0);
@@ -49,9 +49,14 @@ void Serveur::InitServeur(String id) {
 
 void Serveur::modifyMeasurements(std::list<std::array<uint32_t, 10>> temps) {
   HTMLgenerator htmlCode = HTMLgenerator();
-  std::string str = htmlCode.getCode(temps);
+  //for (const std::array<uint32_t, 10> &tab : temps)
+        //for (uint32_t t : tab)
+            //Serial.print(std::uint32_t(t));
+  /*std::string str = htmlCode.getCode(temps);
   const char *cstr = str.c_str();
-  page = String(cstr);
+  page = String(cstr);*/
+
+  page = htmlCode.getCode(temps);
 }
 
 void Serveur::useServeur() {
