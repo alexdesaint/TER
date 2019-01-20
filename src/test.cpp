@@ -578,3 +578,57 @@ void loop() {
 }
 
 #endif
+
+/******************************* test RWtab *******************************/
+#ifdef testRWtab
+
+#include "RWtab.hpp"
+
+RWtab rwtab ;
+void setup() {
+  Serial.begin(9600);
+  uint32_t tab[10];
+  for(int i=0 ; i<10 ; i++)
+    tab[i] = (i+1)*10 ;
+
+  uint32_t i1 = (uint32_t) &tab[0] ;
+  uint32_t i2 = (uint32_t) &tab[1] ;
+  uint32_t i3 = (uint32_t) &tab[3] ;
+  Serial.println(i1);
+  Serial.println(i2);
+  Serial.println(i3);
+
+  
+
+  rwtab.remplirTableau(tab);
+
+}
+
+void loop() {
+  if(Serial.available()){
+    char data = Serial.read();
+    if(data =='k'){
+      Serial.println("true K");
+      rwtab.afficher();
+    }
+
+
+    if(data =='l'){
+      rwtab.erase();
+      rwtab.write();
+      Serial.println("false l");
+      Serial.println(rwtab.read());
+    }
+
+    if(data =='j'){
+
+      Serial.println("false j");
+      Serial.println(rwtab.read());
+    }
+
+
+    
+
+  }
+}
+#endif
