@@ -8,18 +8,21 @@
 class RWtab {
     private:
 
-    uint32_t tab[10][20];
-    uint32_t tabTest[10];
-    uint32_t tabRead[10];
+    uint32_t tabToutesMesures[20][10];
+    uint32_t tabToutesMesuresRead[20][10];
+
+    uint32_t tabUneMesure[10];
 
 
     public:
         void init();
 
-        void erase();
-        void write();
-        uint32_t read();
-        void remplirTableau(uint32_t tab[10]);
+        void clearAll();
+        void write(int indexTableau);
+        void writeAll();
+        void readAll();
+        uint32_t read(int indexTableau);
+        void remplirTableau(uint32_t tab[10],int index);
         void afficher();
 
 

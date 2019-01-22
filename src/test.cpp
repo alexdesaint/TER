@@ -583,47 +583,92 @@ void loop() {
 #ifdef testRWtab
 
 #include "RWtab.hpp"
+#include "EEPROM.h"
 
 RWtab rwtab ;
 void setup() {
   Serial.begin(9600);
-  uint32_t tab[10];
-  for(int i=0 ; i<10 ; i++)
-    tab[i] = (i+1)*10 ;
-
-  uint32_t i1 = (uint32_t) &tab[0] ;
-  uint32_t i2 = (uint32_t) &tab[1] ;
-  uint32_t i3 = (uint32_t) &tab[3] ;
-  Serial.println(i1);
-  Serial.println(i2);
-  Serial.println(i3);
-
-  
-
-  rwtab.remplirTableau(tab);
-
+  EEPROM.begin(512);
+  Serial.print("Hello World!");
 }
 
 void loop() {
+  
   if(Serial.available()){
     char data = Serial.read();
     if(data =='k'){
+      uint32_t tab[10];
+      for(int i=0 ; i<10 ; i++)
+        tab[i] = (i+1)*10 ;
+
+      rwtab.remplirTableau(tab,0);
+      rwtab.remplirTableau(tab,1);
+      rwtab.remplirTableau(tab,3);
       Serial.println("true K");
+      rwtab.afficher();
+    }
+    if(data =='l'){
+      rwtab.writeAll();
+      Serial.println("false l");
+      Serial.println(rwtab.read(0));
+      rwtab.afficher();
+    }
+    if(data =='p'){
+      rwtab.afficher();
+    }
+
+    if(data =='j'){
+      rwtab.clearAll();
+      Serial.println("false j");
+      rwtab.readAll();
+      rwtab.afficher();
+    }
+
+    
+    if(data =='o'){
+      rwtab.clearAll();
+      Serial.println("false o");
+      rwtab.writeAll();
       rwtab.afficher();
     }
 
 
+    
+
+  }
+}
+#endif
+
+/******************************* test Memoire *******************************/
+#ifdef testMemoire
+
+#include "RWtab.hpp"
+#include <EEPROM.h>
+RWtab rwtab ;
+void setup() {
+ Serial.begin(9600);
+EEPROM.begin(512);
+
+}
+
+void loop() {
+  int val = 10 ;
+  if(Serial.available()){
+    char data = Serial.read();
+    if(data =='k'){
+      EEPROM.write(0,val);
+    }
+
+
     if(data =='l'){
-      rwtab.erase();
-      rwtab.write();
-      Serial.println("false l");
-      Serial.println(rwtab.read());
+      EEPROM.write(0,val+20);
+
     }
 
     if(data =='j'){
-
-      Serial.println("false j");
-      Serial.println(rwtab.read());
+      int value = EEPROM.read(0);
+      Serial.print(value, DEC);
+      Serial.println();
     }
 
 
