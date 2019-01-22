@@ -168,8 +168,8 @@ void loop() {
 #endif
 
 
-/*********************** test maraboutage*************************/
-#ifdef testEcran2
+/*********************** test Scann I2C *************************/
+#ifdef testI2Cscann
 
 #include <Wire.h>        // Only needed for Arduino 1.6.5 and earlier
 #include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
@@ -198,6 +198,44 @@ void loop()
   e.clear();
   e.write("alex t moch");
   delay(5000);
+}
+#endif
+
+/*********************** test LED *************************/
+#ifdef testLED
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(D0, OUTPUT);
+}
+
+void loop()
+{
+  digitalWrite(D0, HIGH);
+  delay(1000);
+  digitalWrite(D0, LOW);
+  delay(1000);
+}
+#endif
+
+/******************************* test Bouton *******************************/
+#ifdef testBouton
+
+bool boutonOld;
+unsigned int num = 0;
+
+void ISR() {
+  Serial.println("Press");
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(D5,INPUT);
+  attachInterrupt(digitalPinToInterrupt(D5), ISR, FALLING);
+}
+
+void loop() {
 }
 #endif
 
