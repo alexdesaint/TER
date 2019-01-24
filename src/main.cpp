@@ -61,6 +61,6 @@ void setup() {
 
 void loop() {
   serveur.useServeur();
-  ecran.write(String(tempsVol));
+  ecran.write("Saut "+ String(cpt) + " " + String(tempsVol));
 }
 #endif
