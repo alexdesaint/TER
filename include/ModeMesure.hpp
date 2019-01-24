@@ -22,19 +22,19 @@ private:
   bool boolLancerMesure = false ; 
   bool boolEntrainDeMesurer = false ;
 
-
-  //std::array<uint64_t, 10> tabTemps ;
   std::array<uint32_t, 10> tabTemps ;
   int indiceTabTemps;
 
 
 public:
   uint32_t lectureTemps();
+
   void init();
-  //std::array<uint64_t, 10> getTabTemps() ;
+
   std::array<uint32_t, 10> getTabTemps() ;
 
   void absencePersonne();
+
   bool presencePersonne();
 
   void presenceBouton();
@@ -44,8 +44,6 @@ public:
   int getIndice();
 
   void cleanTab();
-
-
 
   uint32_t getTime();
 };

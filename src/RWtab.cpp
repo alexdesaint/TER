@@ -1,7 +1,6 @@
 #include "RWtab.hpp"
 #include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
 #include <EEPROM.h>
 
 #define CONFIG_SECTOR (0x80-6)

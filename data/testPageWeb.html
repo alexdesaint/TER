@@ -127,6 +127,7 @@
             marge = 50;
             taille = 270;
             n = 8;
+            div = 100000;
 
             ctx.textAlign = "right";
 
@@ -154,9 +155,9 @@
 
             var sum = 0;
             for (var i = 0; i < dat.length; i++) {
-                point(ctx, i, dat[i], marge, taille, n);
+                point(ctx, i, dat[i]/div, marge, taille, n);
                 if (i > 0) {
-                    lineGraph(ctx, i - 1, dat[i - 1], i, dat[i], marge, taille, n);
+                    lineGraph(ctx, i - 1, dat[i - 1]/div, i, dat[i]/div, marge, taille, n);
                 }
                 sum += dat[i];
             }
@@ -165,7 +166,7 @@
 
             ctx.strokeStyle = 'rgb(0, 0, 255)';
             sum /= 10;
-            lineGraph(ctx, 0, sum, 9, sum, marge, taille, n);
+            lineGraph(ctx, 0, sum / div, 9, sum / div, marge, taille, n);
 
             ctx.fillStyle = ctx.strokeStyle;
             ctx.fillRect(195, 4, 30, 12);
@@ -173,19 +174,13 @@
     </script>
 
     <script>
-        var data = [
-            [10, 33, 55, 44, 10, 22, 10, 77, 55, 10],
-            [44, 48, 30, 22, 55, 66, 45, 22, 66, 10],
-            [10, 33, 55, 44, 10, 22, 10, 77, 55, 10],
-            [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]
-        ];
 
         function makeTableauDesTemps(table) {
             var ret = '<table class="temps"><tr><th>Saut</th><th>Temps de vol</th></tr>';
 
             var i;
             for (i = 0; i < 10; i++) {
-                ret += '<tr><td>' + (i + 1) + '</td><td>' + table[i] + ' ms</td></tr>';
+                ret += '<tr><td>' + (i + 1) + '</td><td>' + table[i] / 1000000 + ' s</td></tr>';
             }
 
             var sum = 0;
@@ -193,8 +188,8 @@
                 sum += table[j];
             }
 
-            ret += '<tr><th>Total</th><td>' + sum + ' points </td></tr>';
-            ret += '<tr><th>Moyenne</th><td>' + sum / 10 + ' ms </td></tr>';
+            ret += '<tr><th>Total</th><td>' + sum / 1000000+ ' points </td></tr>';
+            ret += '<tr><th>Moyenne</th><td>' + sum / 1000000 / 10 + ' s </td></tr>';
             ret += '</table>';
 
             return ret;
@@ -256,10 +251,7 @@
 <script>
 
     var data = [
-        [10, 33, 55, 44, 10, 22, 10, 77, 55, 10],
-        [44, 48, 30, 22, 55, 66, 45, 22, 66, 10],
-        [10, 33, 55, 44, 10, 22, 10, 77, 55, 10],
-        [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]
+        [715313, 725444, 735542, 936684, 956824, 836077, 946689, 805822, 695172, 685162]
     ];
 
     var code = '<table>';
