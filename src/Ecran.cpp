@@ -19,7 +19,7 @@ void Ecran::clear() {
 void Ecran::write(String str) {
   display.clear();
   display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_16);
+  display.setFont(ArialMT_Plain_24);
   display.drawString(0, 20, str);
   display.display();
 }
