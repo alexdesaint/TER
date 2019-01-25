@@ -2,7 +2,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
-ModeMesure::ModeMesure(int seuil){
+ModeMesure::ModeMesure(int seuil,int seuilInter){
+  this->seuilInterferance = seuilInter;
   this->seuilRebond = seuil ;
 }
 
@@ -37,6 +38,7 @@ void ModeMesure::absencePersonne()
     this->totalTempsPause = 0;
     this->time_us = 0;
     this->indiceTabTemps = 0;
+    this->lastTime = 0 ;
   }
 
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
@@ -51,6 +53,7 @@ void ModeMesure::absencePersonne()
       // On calcule le temps total pendant qu'on est dans le tapis
       this->totalTempsPause =
           totalTempsPause + (this->timePauseEnd - this->timePauseStart);
+      this->lastTime = (this->timePauseEnd - this->timePauseStart);
     }
 
     this->boolLancerMesure = true;
@@ -62,7 +65,6 @@ void ModeMesure::absencePersonne()
 bool ModeMesure::presencePersonne()
 {
   this->boolPresencePersonne = true;
-  int mode;
 
   if ((boolMode1 = false) && (this->boolLancerMesure == false))
   {
@@ -75,7 +77,6 @@ bool ModeMesure::presencePersonne()
     this->boolMode2 = false;
     this->time_us = 0;
     this->indiceTabTemps = 0;
-    mode = 1;
     Serial.println("mode 1");
   }
 
@@ -90,7 +91,6 @@ bool ModeMesure::presencePersonne()
     this->boolMode2 = true;
     this->boolMode1 = false;
     this->indiceTabTemps = 0;
-    mode = 2;
     Serial.println("mode 2");
   }
 
@@ -118,7 +118,7 @@ bool ModeMesure::presencePersonne()
       this->timefinished = micros();
 
       // Code anti rebond avec un seuil
-      if (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)
+      if ( (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)&& (this->lastTime/1000 > this->seuilInterferance)  )
       {
         this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
