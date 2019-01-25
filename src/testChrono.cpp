@@ -17,13 +17,10 @@ void printTab(std::array<uint32_t, 10> tabTemps)
 void setup()
 {
 	Serial.begin(9600);
-}
 
-void loop()
-{
 	ModeMesure modeMesure;
 
-	modeMesure.lancerMesure();
+	Serial.println("");
 
 	for (int i = 0; i < 50; i++)
 	{
@@ -31,15 +28,25 @@ void loop()
 
 		delay(500);
 
-		if (modeMesure.presencePersonne())
+		Serial.printf("Saut %i ", i);
+
+		if(i == 10) {
+			modeMesure.lancerMesure();
+			Serial.print("LancerMesure ");
+		}
+
+		if (modeMesure.presencePersonne()) {
 			Serial.println("True");
-		else
-			Serial.println("False");
+			printTab(modeMesure.getTabTemps());
+		}
 
 		delay(500);
 	}
+}
 
-	while(true){}
+void loop()
+{
+	
 }
 
 #endif
