@@ -22,7 +22,7 @@ private:
   bool boolPresencePersonne = false ;
   bool boolBouton = false ; 
   bool boolLancerMesure = false ; 
-  bool boolEntrainDeMesurer = false ;
+  bool boolFinMesure = false ;
 
   std::array<uint32_t, 10> tabTemps ;
   int indiceTabTemps;

@@ -116,16 +116,15 @@ bool ModeMesure::presencePersonne()
       // Code anti rebond avec un seuil
       if (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)
       {
-        this->boolEntrainDeMesurer = false;
+        this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
         tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
         this->lastFlyTime = this->timefinished - this->timePauseEnd;
         this->indiceTabTemps++;
         if(this->indiceTabTemps==10){
-          this->boolEntrainDeMesurer = true;
-          this->indiceTabTemps==0;
-          }
+          this->boolFinMesure = true;
+        }
 
         //Serial.println((uint32_t)(this->timefinished - this->timePauseEnd));
         presenceTrampolin = true;
@@ -141,8 +140,7 @@ bool ModeMesure::presencePersonne()
   else
   {
     this->boolLancerMesure = false;
-    
-
+    this->boolFinMesure = false;
     // this->indiceTabTemps=0 ;
   }
 
