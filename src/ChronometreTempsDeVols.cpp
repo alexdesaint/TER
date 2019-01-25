@@ -3,7 +3,9 @@
 #include <Arduino.h>
 #include <user_interface.h>
 
-uint32_t ChronometreTempsDeVols::getLastValidFlyTime() {
+ChronometreTempsDeVols::ChronometreTempsDeVols(uint32_t seuilRebond) : seuilRebond(seuilRebond*1000) {}
+
+uint32_t ChronometreTempsDeVols::getTime() {
   return lastValidFlyTime;
 }
 
@@ -48,10 +50,6 @@ bool ChronometreTempsDeVols::absencePersonne() {
 
     mesureSolValide = true;
     tabTemps[indiceTabTemps].tempsAbsence = now;
-
-    Serial.println("Temps Sol Valide");
-  } else {
-    mesureVolValide = false;
   }
 
   return finMesure;
@@ -66,13 +64,5 @@ void ChronometreTempsDeVols::presencePersonne() {
   if (elapsedTime > seuilRebond) {
     tabTemps[indiceTabTemps].tempsPresence = now;
     mesureVolValide = true;
-
-    Serial.println("Temps Vol Valide");
   }
-
-  /*String print;
-  for (Mesure m : tabTemps) {
-    print += m.toString();
-  }
-  Serial.println(print);*/
 }

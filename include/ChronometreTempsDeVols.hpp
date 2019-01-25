@@ -43,7 +43,9 @@ private:
   int indiceTabTemps = 0;
 
 public:
-  uint32_t getLastValidFlyTime();
+  ChronometreTempsDeVols(uint32_t seuilRebond = 300);
+
+  uint32_t getTime();
 
   std::array<uint32_t, 10> getTabTemps();
 
