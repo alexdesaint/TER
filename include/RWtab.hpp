@@ -8,6 +8,8 @@
 class RWtab {
     private:
 
+    uint32_t index_write;
+    uint32_t index_remove;
     uint32_t tabToutesMesures[20][10];
     uint32_t tabToutesMesuresRead[20][10];
 
@@ -22,8 +24,10 @@ class RWtab {
         void writeAll();
         void readAll();
         uint32_t read(int indexTableau);
-        void remplirTableau(uint32_t tab[10],int index);
+        void remplirTableau(uint32_t tab[10]);
+        void removeTab();
         void afficher();
+        void reset();
 
 
 

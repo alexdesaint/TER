@@ -21,17 +21,21 @@ class WebServer {
 } 
 
 class ModeMesure{ 
-    -tabTemps : array<uint32, 10>
+	-
+    -tabTemps : list<array<uint32, 10>>
     -mesureCourante : array<uint32, 10>
     __
-    +getTabTemps() : array<uint32, 10>
+    +getTabTemps() : list<array<uint32, 10>>
     +lancerMesure()
     +presancePersonne() : bool
     .. Note ..
     presancePersonne() retourne un booléen pour indiquer la fin
+	
+	+presanceBouton()
+	+absenceBouton();
     de la mesure :
-    True - fin de la mesure
-    False - mesure en cours
+    True - Mesure en cours
+    False - fin de la mesure
     ..
     +absencePesonne()
 }

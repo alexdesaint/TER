@@ -639,12 +639,11 @@ void loop() {
       for(int i=0 ; i<10 ; i++)
         tab[i] = (i+1)*10 ;
 
-      rwtab.remplirTableau(tab,0);
-      rwtab.remplirTableau(tab,1);
-      rwtab.remplirTableau(tab,3);
+      rwtab.remplirTableau(tab);
       Serial.println("true K");
       rwtab.afficher();
     }
+    
     if(data =='l'){
       rwtab.writeAll();
       Serial.println("false l");
