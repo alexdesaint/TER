@@ -118,7 +118,7 @@ bool ModeMesure::presencePersonne()
       this->timefinished = micros();
 
       // Code anti rebond avec un seuil
-      if ( (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)&& (this->lastTime/1000 > this->seuilInterferance)  )
+      if ( (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)) //&& (this->lastTime/1000 > this->seuilInterferance)  )
       {
         this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
