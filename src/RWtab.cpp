@@ -1,7 +1,6 @@
 #include "RWtab.hpp"
 #include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
 #include <EEPROM.h>
 
 #define ADRESSE 0
