@@ -91,7 +91,7 @@ void setup() {
 		Serial.print("{AP ");
 
 		
-		delay(40); int totDelay = 40;
+		delay(45); int totDelay = 45;
 
 		//GLITCH
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());

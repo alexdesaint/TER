@@ -38,7 +38,7 @@ void ModeMesure::absencePersonne()
     this->totalTempsPause = 0;
     this->time_us = 0;
     this->indiceTabTemps = 0;
-    this->lastTime = 0 ;
+    this->lastTime = micros() ;
   }
 
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
@@ -51,13 +51,14 @@ void ModeMesure::absencePersonne()
       if((micros()-this->timePauseStart)/1000 > this->seuilInterferance){
         this->timePauseEnd = micros();
         this->boolPause = false;
+        this->totalTempsPause =
+          totalTempsPause + (this->timePauseEnd - this->timePauseStart);
+        this->lastTime = (this->timePauseEnd - this->timePauseStart);
       }
 
 
       // On calcule le temps total pendant qu'on est dans le tapis
-      this->totalTempsPause =
-          totalTempsPause + (this->timePauseEnd - this->timePauseStart);
-      this->lastTime = (this->timePauseEnd - this->timePauseStart);
+      
     }
 
     this->boolLancerMesure = true;
@@ -120,7 +121,7 @@ bool ModeMesure::presencePersonne()
      
 
       // Code anti rebond avec un seuil
-      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond)) //&& (this->lastTime/1000 > this->seuilInterferance)  )
+      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond) && (this->lastTime/1000 > this->seuilInterferance)  )
       {
         this->boolPause = true;
         this->timePauseStart = micros();
