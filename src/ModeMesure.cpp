@@ -41,14 +41,18 @@ void ModeMesure::absencePersonne()
     this->lastTime = 0 ;
   }
 
+  
+
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
+    
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
     if ((boolPresencePersonne == false) && (this->boolPause == true) &&
         (boolLancerMesure == true))
     {
       this->boolPause = false;
-      this->timePauseEnd = micros();
+      if(((micros()-this->timePauseStart)/1000) >this->seuilInterferance)
+        this->timePauseEnd = micros();
 
       // On calcule le temps total pendant qu'on est dans le tapis
       this->totalTempsPause =
