@@ -26,7 +26,7 @@ typedef struct Mesure_T {
 class ChronometreTempsDeVols {
 private:
   // Seuil pour le rebond
-  uint32_t seuilRebond = 200000;
+  uint32_t seuilRebond = 100000;
 
   uint32_t lastTime = 0, lastValidFlyTime = 0;
 

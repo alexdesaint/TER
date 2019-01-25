@@ -2,7 +2,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
-void ModeMesure::init() {
+void ModeMesure::init()
+{
   this->indiceTabTemps = 0;
   this->boolPause = false;
   this->boolMode1 = false;
@@ -11,12 +12,17 @@ void ModeMesure::init() {
 
 int ModeMesure::getIndice() { return this->indiceTabTemps; }
 
-uint32_t ModeMesure::lectureTemps() { return this->time_us / 1000; }
+uint32_t ModeMesure::lectureTemps() { return this->time_us; }
 
-void ModeMesure::absencePersonne() {
+void ModeMesure::absencePersonne()
+{
+
+
+  presenceTrampolin = false;
   boolPresencePersonne = false;
   if ((boolPresencePersonne == false) && (this->boolPause == true) &&
-      (this->boolLancerMesure == false)) {
+      (this->boolLancerMesure == false))
+  {
     this->boolPause = false;
     // On remet tout a 0 et si on appui dans le bouton on passe au mode 2 avec
     // ces initialization
@@ -29,10 +35,12 @@ void ModeMesure::absencePersonne() {
     this->indiceTabTemps = 0;
   }
 
-  if (this->indiceTabTemps < 10 && boolLancerMesure == true) {
+  if (this->indiceTabTemps < 10 && boolLancerMesure == true)
+  {
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
     if ((boolPresencePersonne == false) && (this->boolPause == true) &&
-        (boolLancerMesure == true)) {
+        (boolLancerMesure == true))
+    {
       this->boolPause = false;
       this->timePauseEnd = micros();
 
@@ -42,15 +50,18 @@ void ModeMesure::absencePersonne() {
     }
 
     this->boolLancerMesure = true;
-  } else
+  }
+  else
     this->boolLancerMesure = false;
 }
 
-bool ModeMesure::presencePersonne() {
+bool ModeMesure::presencePersonne()
+{
   this->boolPresencePersonne = true;
   int mode;
 
-  if ((boolMode1 = false) && (this->boolLancerMesure == false)) {
+  if ((boolMode1 = false) && (this->boolLancerMesure == false))
+  {
     this->timestart = micros();
     this->timePauseStart = micros();
     this->timePauseEnd = micros();
@@ -65,7 +76,8 @@ bool ModeMesure::presencePersonne() {
   }
 
   // Init du mode2 seulement ce fait une foit quand on rentre
-  if ((boolMode2 = false) && (boolLancerMesure == true)) {
+  if ((boolMode2 = false) && (boolLancerMesure == true))
+  {
     this->totalTempsPause = 0;
     // this->timestart = micros();
     // this->timePauseStart = micros();
@@ -78,7 +90,8 @@ bool ModeMesure::presencePersonne() {
     Serial.println("mode 2");
   }
 
-  if ((boolPresencePersonne == true) && (this->boolLancerMesure == false)) {
+  if ((boolPresencePersonne == true) && (this->boolLancerMesure == false))
+  {
     this->boolPause = true;
     // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas
     // appuyer dans le bouton quand on est dans cette situation la
@@ -89,35 +102,47 @@ bool ModeMesure::presencePersonne() {
     this->time_us = 0;
   }
 
-  if (this->indiceTabTemps < 10 && boolLancerMesure == true) {
+  if (this->indiceTabTemps < 10 && boolLancerMesure == true)
+  {
     // On detecte qu'on a touché le trampolin on lance le timer pour le temps de
     // pause
     if (boolPresencePersonne == true && this->boolPause == false &&
-        boolLancerMesure == true) {
+        boolLancerMesure == true)
+    {
       this->boolPause = true;
       this->timePauseStart = micros();
       this->timefinished = micros();
 
       // Code anti rebond avec un seuil
-      if (((this->timefinished - this->timePauseEnd) / 1000) >
-          this->seuilRebond) {
+      if (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)
+      {
+        this->boolEntrainDeMesurer = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
-        tabTemps[this->indiceTabTemps] =
-            (uint32_t)(this->timefinished - this->timePauseEnd) / 1000;
+        tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
+        this->lastFlyTime = this->timefinished - this->timePauseEnd;
         this->indiceTabTemps++;
-        Serial.println((uint32_t)(this->timefinished - this->timePauseEnd) /
-                       1000);
+        if(this->indiceTabTemps==10){
+          this->boolEntrainDeMesurer = true;
+          this->indiceTabTemps==0;
+          }
+
+        //Serial.println((uint32_t)(this->timefinished - this->timePauseEnd));
+        presenceTrampolin = true;
       }
 
       // On compte le temps de vol total
       this->time_us =
           (this->timefinished - this->timestart) - this->totalTempsPause;
+      
     }
-    this->boolEntrainDeMesurer = true;
-  } else {
-    this->boolEntrainDeMesurer = false;
+    
+  }
+  else
+  {
     this->boolLancerMesure = false;
+    
+
     // this->indiceTabTemps=0 ;
   }
 
@@ -128,7 +153,18 @@ std::array<uint32_t, 10> ModeMesure::getTabTemps() { return this->tabTemps; }
 
 void ModeMesure::lancerMesure() { this->boolLancerMesure = true; }
 
-void ModeMesure::cleanTab() {
+void ModeMesure::cleanTab()
+{
   for (int i = 0; i < 10; i++)
     this->tabTemps[i] = 0;
+}
+
+uint32_t ModeMesure::getTime()
+{
+  return this->lastFlyTime;
+}
+
+bool ModeMesure::getIndicateur()
+{
+  return this->presenceTrampolin;
 }

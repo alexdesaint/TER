@@ -129,11 +129,21 @@ String header = R"=====(
             ctx.lineWidth = "1";
             ctx.strokeStyle = 'rgb(60, 60, 60)';
 
+            div = 1000000;
+
+            if(Math.max.apply(null, dat)/div < 1) {
+                pas = 0.1;
+            } else if(Math.max.apply(null, dat)/div < 2) {
+                pas = 0.2;
+            } else if(Math.max.apply(null, dat)/div < 3) {
+                pas = 0.3;
+            } else if(Math.max.apply(null, dat)/div < 4) {
+                pas = 0.4;
+            } 
+
             marge = 50;
             taille = 270;
             n = 10;
-            div = 1000000;
-            pas = 0.1;
 
             ctx.textAlign = "right";
 
@@ -151,7 +161,7 @@ String header = R"=====(
 
             ctx.textAlign = "center";
             write(ctx, "Saut", marge + taille / 2, marge - 30);
-            writeVert(ctx, "Temps en ms", marge - 30, marge + taille / 2);
+            writeVert(ctx, "Temps en s", marge - 30, marge + taille / 2);
 
             write(ctx, "Temps de vol", marge + taille / 4, marge + taille + 15);
             write(ctx, "Moyenne", marge + 3 * taille / 4, marge + taille + 15);
