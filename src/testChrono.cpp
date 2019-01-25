@@ -14,17 +14,17 @@ void printTab(std::array<uint32_t, 10> tabTemps) {
 		else
 			print += ", ";
 		
-		print += String(m);
+		print += String(m/1000);
 	}
 
-	print += "]";
+	print += "] ";
 	Serial.print(print);
 }
 
 void setup() {
 	Serial.begin(9600);
 
-	ModeMesure modeMesure(30);
+	ModeMesure modeMesure(30, 30);
 
 	Serial.println("");
 
@@ -32,58 +32,57 @@ void setup() {
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
+		Serial.print("{A ");
 
-		delay(50);
+		int totDelay = 0;
+
+		delay(50 * (i%5 + 1));
+		totDelay += 50 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
-			Serial.print("LancerMesure ");
+			Serial.print("LM ");
 		}
 
-		bool pp = modeMesure.presencePersonne();
-		
-		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		if(pp) {
-			Serial.print("Fin Mesure : ");
-			printTab(modeMesure.getTabTemps());
-		}
+		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
 
-		Serial.println("");
+		Serial.println("}");
 
 		delay(50);
 	}
 
 	/************************************************************************/
 
-	Serial.println("Test 2 -- un rebonds absencePersonne");
+	Serial.println("Test 2 -- un rebonds a absencePersonne");
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
-		delay(5);
+		Serial.print("{A ");
 
-		if(modeMesure.presencePersonne()) {
-			Serial.print("Fin Mesure : ");
-			printTab(modeMesure.getTabTemps());
-		}
-		delay(5);
+		int totDelay = 0;
 
+		delay(5);
+		totDelay += 5;
+
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+		delay(5);
+		totDelay += 5;
 		modeMesure.absencePersonne();
-		delay(40);
-
-		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+		delay(40 * (i%5 + 1));
+		totDelay += 40 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
-			Serial.print("LancerMesure ");
+			Serial.print("LM ");
 		}
 
-		if(modeMesure.presencePersonne()) {
-			Serial.print("Fin Mesure : ");
-			printTab(modeMesure.getTabTemps());
-		}
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		Serial.println("");
+		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+
+		Serial.println("}");
 
 		delay(50);
 	}
@@ -94,30 +93,31 @@ void setup() {
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
-		delay(50);
+		Serial.print("{A ");
 
-		if(modeMesure.presencePersonne()) {
-			Serial.print("Fin Mesure : ");
-			printTab(modeMesure.getTabTemps());
-		}
+		int totDelay = 0;
+
+		delay(50);
+		totDelay += 50;
+
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 		delay(5);
+		totDelay += 50;
 
 		modeMesure.absencePersonne();
-		delay(50);
-
-		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+		delay(30 * (i%5 + 1));
+		totDelay += 30 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
-			Serial.print("LancerMesure ");
+			Serial.print("LM ");
 		}
 
-		if(modeMesure.presencePersonne()) {
-			Serial.print("Fin Mesure : ");
-			printTab(modeMesure.getTabTemps());
-		}
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		Serial.println("");
+		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+
+		Serial.println("}");
 
 		delay(50);
 	}
