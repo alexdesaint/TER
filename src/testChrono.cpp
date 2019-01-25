@@ -18,7 +18,7 @@ void setup()
 {
 	Serial.begin(9600);
 
-	ModeMesure modeMesure;
+	ModeMesure modeMesure(300);
 
 	Serial.println("");
 
@@ -39,6 +39,9 @@ void setup()
 			Serial.println("True");
 			printTab(modeMesure.getTabTemps());
 		}
+
+		Serial.print(modeMesure.getTime());
+		
 
 		delay(500);
 	}

@@ -2,6 +2,12 @@
 #include <SPI.h>
 #include <Wire.h>
 
+void ModeMeure::ModeMesure(int seuil){
+  this->seuilRebond = seuil ;
+
+
+}
+
 void ModeMesure::init()
 {
   this->indiceTabTemps = 0;

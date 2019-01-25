@@ -29,6 +29,7 @@ private:
 
 
 public:
+  ModeMesure(int seuil);
   uint32_t lectureTemps();
 
   void init();
