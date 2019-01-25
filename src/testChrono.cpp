@@ -36,7 +36,7 @@ void setup() {
 
 		int totDelay = 0;
 
-		delay(50 * (i%5 + 1));
+		delay(50 * (i%3 + 1));
 		totDelay += 50 * (i%3 + 1);
 
 		if(i == 10) {
@@ -70,7 +70,7 @@ void setup() {
 		delay(5);
 		totDelay += 5;
 		modeMesure.absencePersonne();
-		delay(40 * (i%5 + 1));
+		delay(40 * (i%3 + 1));
 		totDelay += 40 * (i%3 + 1);
 
 		if(i == 10) {
@@ -102,10 +102,10 @@ void setup() {
 
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 		delay(5);
-		totDelay += 50;
+		totDelay += 5;
 
 		modeMesure.absencePersonne();
-		delay(30 * (i%5 + 1));
+		delay(30 * (i%3 + 1));
 		totDelay += 30 * (i%3 + 1);
 
 		if(i == 10) {
