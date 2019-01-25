@@ -7,7 +7,7 @@
 class ModeMesure {
 private:
   //Seuil pour le rebond
-  uint32_t seuilRebond = 300 ;
+  uint32_t seuilRebond ;
   // TIme start ,finished et total serve pour calculer le temps de vols
   uint32_t timestart, timefinished,  timetotal ;
   // TimePauseStart and end sont les temps pendant que on est entrain de toucher le trampolin
@@ -29,7 +29,7 @@ private:
 
 
 public:
-  ModeMesure(int seuil);
+  ModeMesure(int seuil=300);
   uint32_t lectureTemps();
 
   void init();
