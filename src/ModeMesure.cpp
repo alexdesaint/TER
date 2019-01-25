@@ -41,18 +41,18 @@ void ModeMesure::absencePersonne()
     this->lastTime = 0 ;
   }
 
-  
-
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
-    
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
     if ((boolPresencePersonne == false) && (this->boolPause == true) &&
         (boolLancerMesure == true))
     {
-      this->boolPause = false;
-      if(((micros()-this->timePauseStart)/1000) >this->seuilInterferance)
+      
+      if((micros()-this->timePauseStart)/1000 > this->seuilInterferance){
         this->timePauseEnd = micros();
+        this->boolPause = false;
+      }
+
 
       // On calcule le temps total pendant qu'on est dans le tapis
       this->totalTempsPause =
@@ -117,13 +117,14 @@ bool ModeMesure::presencePersonne()
     if (boolPresencePersonne == true && this->boolPause == false &&
         boolLancerMesure == true)
     {
-      this->boolPause = true;
-      this->timePauseStart = micros();
-      this->timefinished = micros();
+     
 
       // Code anti rebond avec un seuil
-      if ( (((this->timefinished - this->timePauseEnd) / 1000) > this->seuilRebond)) //&& (this->lastTime/1000 > this->seuilInterferance)  )
+      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond)) //&& (this->lastTime/1000 > this->seuilInterferance)  )
       {
+        this->boolPause = true;
+        this->timePauseStart = micros();
+        this->timefinished = micros();
         this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
