@@ -54,11 +54,15 @@ void ModeMesure::absencePersonne()
         this->totalTempsPause =
           totalTempsPause + (this->timePauseEnd - this->timePauseStart);
         this->lastTime = (this->timePauseEnd - this->timePauseStart);
+        this->boolInterference = false ;
+      }else
+      {
+      if(lastFlyTime > seuilRebond){
+        //this->boolPause = false;
+        this->boolInterference = true ;
       }
-
-
-      // On calcule le temps total pendant qu'on est dans le tapis
-      
+        /* code */
+      }   
     }
 
     this->boolLancerMesure = true;
@@ -121,7 +125,7 @@ bool ModeMesure::presencePersonne()
      
 
       // Code anti rebond avec un seuil
-      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond) && (this->lastTime/1000 > this->seuilInterferance)  )
+      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond) )// && (this->lastTime/1000 > this->seuilInterferance)  )
       {
         this->boolPause = true;
         this->timePauseStart = micros();
@@ -129,9 +133,22 @@ bool ModeMesure::presencePersonne()
         this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
-        tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
-        this->lastFlyTime = this->timefinished - this->timePauseEnd;
-        this->indiceTabTemps++;
+
+
+
+        if(boolInterference == true && this->indiceTabTemps > 0){
+          this->indiceTabTemps--;
+          tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
+          this->lastFlyTime = this->timefinished - this->timePauseEnd;
+          this->indiceTabTemps++;
+          boolInterference = false;
+
+        }else{
+          tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
+          this->lastFlyTime = this->timefinished - this->timePauseEnd;
+          this->indiceTabTemps++;
+        }
+
         if(this->indiceTabTemps==10){
           this->boolFinMesure = true;
         }
