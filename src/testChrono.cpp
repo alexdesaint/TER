@@ -4,51 +4,126 @@
 
 #include "ModeMesure.hpp"
 
-void printTab(std::array<uint32_t, 10> tabTemps)
-{
-	String print;
-	for (uint32 m : tabTemps)
-	{
-		print += String(m) + ", ";
+void printTab(std::array<uint32_t, 10> tabTemps) {
+	String print = "[";
+	bool s = true;
+
+	for (uint32 m : tabTemps) {
+		if(s)
+			s = false;
+		else
+			print += ", ";
+		
+		print += String(m);
 	}
-	Serial.println(print);
+
+	print += "]";
+	Serial.print(print);
 }
 
-void setup()
-{
+void setup() {
 	Serial.begin(9600);
 
-	ModeMesure modeMesure(300);
+	ModeMesure modeMesure(30);
 
 	Serial.println("");
 
-	for (int i = 0; i < 50; i++)
-	{
+	Serial.println("Test 1 -- pas de rebonds");
+
+	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
 
-		delay(500);
-
-		Serial.printf("Saut %i ", i);
+		delay(50);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
 			Serial.print("LancerMesure ");
 		}
 
-		if (modeMesure.presencePersonne()) {
-			Serial.println("True");
+		bool pp = modeMesure.presencePersonne();
+		
+		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+
+		if(pp) {
+			Serial.print("Fin Mesure : ");
 			printTab(modeMesure.getTabTemps());
 		}
 
-		Serial.print(modeMesure.getTime());
-		
+		Serial.println("");
 
-		delay(500);
+		delay(50);
+	}
+
+	/************************************************************************/
+
+	Serial.println("Test 2 -- un rebonds absencePersonne");
+
+	for (int i = 0; i < 30; i++) {
+		modeMesure.absencePersonne();
+		delay(5);
+
+		if(modeMesure.presencePersonne()) {
+			Serial.print("Fin Mesure : ");
+			printTab(modeMesure.getTabTemps());
+		}
+		delay(5);
+
+		modeMesure.absencePersonne();
+		delay(40);
+
+		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+
+		if(i == 10) {
+			modeMesure.lancerMesure();
+			Serial.print("LancerMesure ");
+		}
+
+		if(modeMesure.presencePersonne()) {
+			Serial.print("Fin Mesure : ");
+			printTab(modeMesure.getTabTemps());
+		}
+
+		Serial.println("");
+
+		delay(50);
+	}
+
+	/************************************************************************/
+
+	Serial.println("Test 3 -- un rebonds en vol");
+
+	for (int i = 0; i < 30; i++) {
+		modeMesure.absencePersonne();
+		delay(50);
+
+		if(modeMesure.presencePersonne()) {
+			Serial.print("Fin Mesure : ");
+			printTab(modeMesure.getTabTemps());
+		}
+		delay(5);
+
+		modeMesure.absencePersonne();
+		delay(50);
+
+		Serial.printf("Saut %i, %u ", i, modeMesure.getTime());
+
+		if(i == 10) {
+			modeMesure.lancerMesure();
+			Serial.print("LancerMesure ");
+		}
+
+		if(modeMesure.presencePersonne()) {
+			Serial.print("Fin Mesure : ");
+			printTab(modeMesure.getTabTemps());
+		}
+
+		Serial.println("");
+
+		delay(50);
 	}
 }
 
-void loop()
-{
+void loop() {
 	
 }
 
