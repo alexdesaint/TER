@@ -27,17 +27,13 @@ void setup() {
 	ModeMesure modeMesure(30, 30);
 
 	Serial.println("");
-
-	Serial.println("Test 1 -- pas de rebonds");
+	Serial.println("Test 1 -- pas de rebond");
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
-		Serial.print("{A ");
+		Serial.print("{AP ");
 
-		int totDelay = 0;
-
-		delay(50 * (i%3 + 1));
-		totDelay += 50 * (i%3 + 1);
+		delay(50 * (i%3 + 1)); int totDelay = 50 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
@@ -46,7 +42,7 @@ void setup() {
 
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+		Serial.printf("PP %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
 
 		Serial.println("}");
 
@@ -55,23 +51,21 @@ void setup() {
 
 	/************************************************************************/
 
-	Serial.println("Test 2 -- un rebonds a absencePersonne");
+	Serial.println("");
+	Serial.println("Test 2 -- un rebond a absencePersonne");
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
-		Serial.print("{A ");
+		Serial.print("{AP ");
 
-		int totDelay = 0;
-
-		delay(5);
-		totDelay += 5;
-
+		//Rebond
+		delay(5); int totDelay = 5;
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
-		delay(5);
-		totDelay += 5;
+		delay(5); totDelay += 5;
 		modeMesure.absencePersonne();
-		delay(40 * (i%3 + 1));
-		totDelay += 40 * (i%3 + 1);
+		//
+
+		delay(40 * (i%3 + 1)); totDelay += 40 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
@@ -80,7 +74,7 @@ void setup() {
 
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+		Serial.printf("PP %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
 
 		Serial.println("}");
 
@@ -89,24 +83,23 @@ void setup() {
 
 	/************************************************************************/
 
-	Serial.println("Test 3 -- un rebonds en vol");
+	Serial.println("");
+	Serial.println("Test 3 -- un rebond en vol");
 
 	for (int i = 0; i < 30; i++) {
 		modeMesure.absencePersonne();
-		Serial.print("{A ");
+		Serial.print("{AP ");
 
-		int totDelay = 0;
+		
+		delay(40); int totDelay = 40;
 
-		delay(50);
-		totDelay += 50;
-
+		//GLITCH
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
-		delay(5);
-		totDelay += 5;
-
+		delay(5); totDelay += 5;
 		modeMesure.absencePersonne();
-		delay(30 * (i%3 + 1));
-		totDelay += 30 * (i%3 + 1);
+		//
+
+		delay(40 * (i%3 + 1)); totDelay += 40 * (i%3 + 1);
 
 		if(i == 10) {
 			modeMesure.lancerMesure();
@@ -115,7 +108,78 @@ void setup() {
 
 		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
 
-		Serial.printf("P %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+		Serial.printf("PP %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+
+		Serial.println("}");
+
+		delay(50);
+	}
+
+	/************************************************************************/
+
+	Serial.println("");
+	Serial.println("Test 4 -- un rebond a presencePersonne");
+
+	for (int i = 0; i < 30; i++) {
+		modeMesure.absencePersonne();
+		Serial.print("{AP ");
+
+		delay(40 * (i%3 + 1)); int totDelay = 40 * (i%3 + 1);
+
+		if(i == 10) {
+			modeMesure.lancerMesure();
+			Serial.print("LM ");
+		}
+
+		//Rebond
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+		delay(5);
+		modeMesure.absencePersonne();
+		delay(5);
+		//
+
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+
+		Serial.printf("PP %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
+
+		Serial.println("}");
+
+		delay(50);
+	}
+
+	/************************************************************************/
+
+	Serial.println("");
+	Serial.println("Test 5 -- un rebond a absencePersonne et a presencePersonne");
+
+	for (int i = 0; i < 30; i++) {
+		modeMesure.absencePersonne();
+		Serial.print("{AP ");
+
+		//Rebond
+		delay(5); int totDelay = 5;
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+		delay(5); totDelay += 5;
+		modeMesure.absencePersonne();
+		//
+
+		delay(40 * (i%3 + 1)); totDelay += 40 * (i%3 + 1);
+
+		if(i == 10) {
+			modeMesure.lancerMesure();
+			Serial.print("LM ");
+		}
+
+		//Rebond
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+		delay(5);
+		modeMesure.absencePersonne();
+		delay(5);
+		//
+
+		if(modeMesure.presencePersonne()) printTab(modeMesure.getTabTemps());
+
+		Serial.printf("PP %i, %i:%u", modeMesure.getIndice(), totDelay,modeMesure.getTime()/1000);
 
 		Serial.println("}");
 
