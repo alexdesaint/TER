@@ -144,7 +144,7 @@ bool ModeMesure::presencePersonne()
     // this->indiceTabTemps=0 ;
   }
 
-  return this->boolEntrainDeMesurer;
+  return this->boolFinMesure;
 }
 
 std::array<uint32_t, 10> ModeMesure::getTabTemps() { return this->tabTemps; }
