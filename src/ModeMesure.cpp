@@ -56,7 +56,23 @@ void ModeMesure::absencePersonne()
 
   }
 
-  if (this->indiceTabTemps < 11 && boolLancerMesure == true)
+  /*if ((boolPresencePersonne == false) && (this->boolPause == true) &&
+      (this->boolLancerMesure == false))
+  {
+    this->boolPause = false;
+    // On remet tout a 0 et si on appui dans le bouton on passe au mode 2 avec
+    // ces initialization
+    this->timestart = micros();
+    this->timePauseStart = micros();
+    this->timePauseEnd = micros();
+    this->timefinished = micros();
+    this->totalTempsPause = 0;
+    this->time_us = 0;
+    this->indiceTabTemps = 0;
+    this->lastTime = micros() ;
+  }*/
+
+  if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
     if ((boolPresencePersonne == false) && (this->boolPause == true) &&
@@ -77,6 +93,7 @@ void ModeMesure::absencePersonne()
         this->boolInterference = true ;
         this->lastTime = micros();
       }
+        /* code */
       }   
     }
 
@@ -96,6 +113,10 @@ bool ModeMesure::presencePersonne()
   if ((boolMode2 = false) && (boolLancerMesure == true))
   {
     this->totalTempsPause = 0;
+    // this->timestart = micros();
+    // this->timePauseStart = micros();
+    // this->timePauseEnd = micros();
+    // this->timefinished = micros();
     this->boolMode2 = true;
     this->boolMode1 = false;
     this->indiceTabTemps = 0;
@@ -112,7 +133,6 @@ bool ModeMesure::presencePersonne()
 
 
 
-
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
     // On detecte qu'on a touché le trampolin on lance le timer pour le temps de
@@ -120,6 +140,8 @@ bool ModeMesure::presencePersonne()
     if (boolPresencePersonne == true && this->boolPause == false &&
         boolLancerMesure == true)
     {
+     
+
       // Code anti rebond avec un seuil
       if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond)  && ((micros()-this->lastTime)/1000 > this->seuilInterferance)  )
       {
@@ -129,7 +151,10 @@ bool ModeMesure::presencePersonne()
         this->boolFinMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
-        if(boolInterference == true && this->indiceTabTemps > 0 && this->indiceTabTemps < 10){
+
+
+
+        if(boolInterference == true && this->indiceTabTemps > 0){
           this->indiceTabTemps--;
           tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
           this->lastFlyTime = this->timefinished - this->timePauseEnd;
@@ -142,7 +167,9 @@ bool ModeMesure::presencePersonne()
           this->indiceTabTemps++;
         }
 
-
+        if(this->indiceTabTemps==10){
+          this->boolFinMesure = true;
+        }
 
         //Serial.println((uint32_t)(this->timefinished - this->timePauseEnd));
         presenceTrampolin = true;
@@ -155,9 +182,12 @@ bool ModeMesure::presencePersonne()
         }
         /* code */
       }
+      
+
       // On compte le temps de vol total
       this->time_us =
-          (this->timefinished - this->timestart) - this->totalTempsPause;    
+          (this->timefinished - this->timestart) - this->totalTempsPause;
+      
     }
     
   }
@@ -168,31 +198,6 @@ bool ModeMesure::presencePersonne()
     // this->indiceTabTemps=0 ;
   }
 
-  if(this->indiceTabTemps==10 ){
-    if(boolInterference == true ){
-      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond)  && ((micros()-this->lastTime)/1000 > this->seuilInterferance)  )
-        {
-          this->boolPause = true;
-          this->timePauseStart = micros();
-          this->timefinished = micros();
-          // On calcule le temps de vols de chaque figure et on la stock dans un
-          // tableau
-            tabTemps[9] = this->timefinished - this->timePauseEnd;
-            this->lastFlyTime = this->timefinished - this->timePauseEnd;
-            boolInterference = false;
-            Serial.print("HOOOLAAA");
-            this->boolFinMesure = true;
-            this->indiceTabTemps=0;
-            
-        }
-    }else
-    {
-      this->boolFinMesure = true;
-      this->indiceTabTemps=0;
-
-    }
-    }
-  
   return this->boolFinMesure;
 }
 
