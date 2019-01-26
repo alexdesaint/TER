@@ -508,7 +508,7 @@ void loop() {
 RWtab rwtab ;
 void setup() {
   Serial.begin(9600);
-  EEPROM.begin(512);
+  EEPROM.begin(1000);
   Serial.print("Hello World!");
 }
 
@@ -529,7 +529,7 @@ void loop() {
     if(data =='l'){
       rwtab.writeAll();
       Serial.println("false l");
-      Serial.println(rwtab.read(0));
+      //Serial.println(rwtab.read(0));
       rwtab.afficher();
     }
     if(data =='p'){
