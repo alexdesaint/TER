@@ -25,7 +25,38 @@ void ModeMesure::absencePersonne()
 
   presenceTrampolin = false;
   boolPresencePersonne = false;
-  if ((boolPresencePersonne == false) && (this->boolPause == true) &&
+
+    if ((boolMode1 = false) && (this->boolLancerMesure == false))
+  {
+    this->timestart = micros();
+    this->timePauseStart = micros();
+    this->timePauseEnd = micros();
+    this->timefinished = micros();
+    this->totalTempsPause = 0;
+    this->boolMode1 = true;
+    this->boolMode2 = false;
+    this->time_us = 0;
+    this->indiceTabTemps = 0;
+    Serial.println("mode 1");
+    this->boolPause = false;
+  }
+
+  if ((boolPresencePersonne == false) && (this->boolLancerMesure == false))
+  {
+    // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas
+    // appuyer dans le bouton quand on est dans cette situation la
+    if((micros()-this->timePauseStart)/1000 > seuilInterferance){
+    this->timestart = micros();
+    this->timePauseEnd = micros();
+    }
+  
+    this->time_us = 0;
+    this->boolPause = false;
+    this->indiceTabTemps = 0;
+
+  }
+
+  /*if ((boolPresencePersonne == false) && (this->boolPause == true) &&
       (this->boolLancerMesure == false))
   {
     this->boolPause = false;
@@ -39,7 +70,7 @@ void ModeMesure::absencePersonne()
     this->time_us = 0;
     this->indiceTabTemps = 0;
     this->lastTime = micros() ;
-  }
+  }*/
 
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
@@ -58,8 +89,9 @@ void ModeMesure::absencePersonne()
       }else
       {
       if(lastFlyTime > seuilRebond){
-        //this->boolPause = false;
+        this->boolPause = false;
         this->boolInterference = true ;
+        this->lastTime = micros();
       }
         /* code */
       }   
@@ -75,19 +107,7 @@ bool ModeMesure::presencePersonne()
 {
   this->boolPresencePersonne = true;
 
-  if ((boolMode1 = false) && (this->boolLancerMesure == false))
-  {
-    this->timestart = micros();
-    this->timePauseStart = micros();
-    this->timePauseEnd = micros();
-    this->timefinished = micros();
-    this->totalTempsPause = 0;
-    this->boolMode1 = true;
-    this->boolMode2 = false;
-    this->time_us = 0;
-    this->indiceTabTemps = 0;
-    Serial.println("mode 1");
-  }
+
 
   // Init du mode2 seulement ce fait une foit quand on rentre
   if ((boolMode2 = false) && (boolLancerMesure == true))
@@ -103,17 +123,15 @@ bool ModeMesure::presencePersonne()
     Serial.println("mode 2");
   }
 
-  if ((boolPresencePersonne == true) && (this->boolLancerMesure == false))
+    if ((boolPresencePersonne == true) && (this->boolLancerMesure == false))
   {
-    this->boolPause = true;
     // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas
     // appuyer dans le bouton quand on est dans cette situation la
-    this->timestart = micros();
     this->timePauseStart = micros();
-    this->timePauseEnd = micros();
-    this->timefinished = micros();
-    this->time_us = 0;
+
   }
+
+
 
   if (this->indiceTabTemps < 10 && boolLancerMesure == true)
   {
@@ -125,7 +143,7 @@ bool ModeMesure::presencePersonne()
      
 
       // Code anti rebond avec un seuil
-      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond) )// && (this->lastTime/1000 > this->seuilInterferance)  )
+      if ( (((micros() - this->timePauseEnd) / 1000) > this->seuilRebond)  && ((micros()-this->lastTime)/1000 > this->seuilInterferance)  )
       {
         this->boolPause = true;
         this->timePauseStart = micros();
@@ -155,7 +173,16 @@ bool ModeMesure::presencePersonne()
 
         //Serial.println((uint32_t)(this->timefinished - this->timePauseEnd));
         presenceTrampolin = true;
+      }else
+      {
+        if(boolInterference == true){
+          this->boolPause = true;
+          this->boolInterference = false ;
+
+        }
+        /* code */
       }
+      
 
       // On compte le temps de vol total
       this->time_us =
