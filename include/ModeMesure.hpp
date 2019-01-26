@@ -23,7 +23,7 @@ private:
 
   // Bool pause , mode 1 et mode 2 sont les boolean qui servent a savoir si on est respectivement dans la pause , mode 1 ou mode 2
   bool boolPause , boolMode1 , boolMode2 ; 
-  bool boolInterference = false ;
+  bool boolInterference = true ;
   bool presenceTrampolin = false ;
   bool boolPresencePersonne = false ;
   bool boolBouton = false ; 
