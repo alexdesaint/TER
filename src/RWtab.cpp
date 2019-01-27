@@ -80,6 +80,9 @@ void RWtab::remplirTableau(uint32_t tab[10])
     }
     this->index_write++;
 
+    if(this->index_lecture<20)
+     this->index_lecture++;
+
     if (this->index_write == 20)
         this->index_write = 0;
 }
@@ -131,6 +134,7 @@ void RWtab::afficher()
 void RWtab::clearAll()
 {
     this->index_write = 0;
+    this->index_lecture=0;
     for (int j = 0; j < 20; j++)
     {
         for (int i = 0; i < 10; i++)
@@ -177,3 +181,41 @@ void RWtab::getTabFilo(uint32_t tab[20][10]){
     }
 
 }
+
+std::list<std::array<uint32_t, 10>> RWtab::getTabLifo(){
+
+    std::list<std::array<uint32_t, 10>> data;
+
+    int index = this->index_write;
+    int index_tab = 0 ;
+
+    std::array<uint32_t, 10> tab;
+    
+    for (int j = index - 1; j >= 0; j--)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            tab[i]= this->tabToutesMesures[j][i] ;
+        }
+        data.push_back(tab);
+
+        index_tab++;
+        if(index_tab>20)
+            Serial.print("Erreur FATALE !!! ");        
+    }
+    for ( int j = (index_lecture-index_write); j >= index; j--)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            tab[i]=this->tabToutesMesures[j][i];
+        }
+        data.push_back(tab);
+        index_tab++;
+        if(index_tab>20)
+            Serial.print("Erreur FATALE !!! ");
+    }
+
+return data;
+    
+}
+

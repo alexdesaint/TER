@@ -3,6 +3,7 @@
 
 #include <cinttypes>
 #include <array>
+#include <list>
 
 
 class RWtab {
@@ -24,6 +25,8 @@ class RWtab {
         void remplirTableau(uint32_t tab[10]);
         void afficher();
         void getTabFilo(uint32_t tab[20][10]);
+
+        std::list<std::array<uint32_t, 10>> getTabLifo()
 
 
 
