@@ -12,15 +12,21 @@
 #include <list>
 #include <cinttypes>
 
-ChronometreTempsDeVols modeMesure;
+ChronometreTempsDeVols modeMesure(300);
 Ecran ecran;
 Serveur serveur;
-int cpt = 0;
-int tempsVol = 0;
+uint32_t nbSaut = 0;
+uint32_t tempsVol = 0;
+uint32_t tempsTotal = 0;
+bool enMesure = false;
 
 std::list<std::array<uint32_t, 10>> data;
 
-void boutonPress() { modeMesure.lancerMesure(); }
+void boutonPress()
+{
+  modeMesure.lancerMesure();
+  enMesure = true;
+}
 
 void laser1Change()
 {
@@ -28,14 +34,22 @@ void laser1Change()
   {
     if (modeMesure.absencePersonne())
     {
-      data.push_back(modeMesure.getTabTemps());
+      enMesure = false;
+      auto tabTemps = modeMesure.getTabTemps();
+
+      tempsTotal = 0;
+
+      for (uint32_t i : tabTemps)
+        tempsTotal += i;
+
+      data.push_back(tabTemps);
+
       serveur.modifyMeasurements(data);
     }
 
     digitalWrite(D0, modeMesure.getIndicateur());
-    //ecran.write(String(modeMesure.getLastValidFlyTime()/1000));
-    tempsVol = modeMesure.getLastValidFlyTime() / 1000;
-    cpt++;
+    tempsVol = modeMesure.getTime();
+    nbSaut = modeMesure.getIndice();
   }
   else
   {
@@ -67,8 +81,12 @@ void setup()
 void loop()
 {
   serveur.useServeur();
-  ecran.write("Saut " + String(cpt) + " " + String(tempsVol));
+  if (enMesure)
+    ecran.write("Saut " + String(nbSaut + 1) + "\n" + String(tempsVol / 1000000.f));
+  else
+    ecran.write("Points " + String(tempsTotal / 1000000.f) + "\n" + String(tempsVol / 1000000.f) + "s");
 }
+
 #endif
 
 #ifdef MAIN2
@@ -88,42 +106,46 @@ void loop()
 ModeMesure modeMesure;
 Ecran ecran;
 Serveur serveur;
-int cpt = 0;
+int nbSaut = 0;
 int tempsVol = 0;
-bool mode;
+int tempsTotal = 0;
+bool enMesure;
 
 std::list<std::array<uint32_t, 10>> data;
 
-void boutonPress() { modeMesure.lancerMesure(); }
+void boutonPress()
+{
+  modeMesure.lancerMesure();
+  enMesure = true;
+}
 
 void laser1Change()
 {
   if (digitalRead(D6))
   {
     modeMesure.absencePersonne();
-
-    tempsVol = modeMesure.getTime() / 1000;
-    /*cpt++;
-    mode = true;*/
   }
   else
   {
     if (modeMesure.presencePersonne())
     {
+      enMesure = false;
       auto tabTemps = modeMesure.getTabTemps();
-      String print;
-      for (uint32 m : tabTemps)
-      {
-        print += String(m) + ", ";
-      }
+
+      tempsTotal = 0;
+
+      for (uint32_t i : tabTemps)
+        tempsTotal += i;
+
       data.push_back(tabTemps);
-      Serial.println(print);
+
       serveur.modifyMeasurements(data);
-      //mode = false;
     }
   }
 
   digitalWrite(D0, modeMesure.getIndicateur());
+  tempsVol = modeMesure.getTime();
+  nbSaut = modeMesure.getIndice();
 }
 
 void setup()
@@ -150,13 +172,10 @@ void setup()
 void loop()
 {
   serveur.useServeur();
-  ecran.write(String(tempsVol));
-
-  /*if(mode == true)
-    ecran.write(String(tempsVol));
+  if (enMesure)
+    ecran.write("Saut " + String(nbSaut + 1) + "\n" + String(tempsVol / 1000000.f));
   else
-  {
-    ecran.write("Saut "+String(cpt)+":\n" + String(tempsVol));
-  }*/
+    ecran.write("Points " + String(tempsTotal / 1000000.f) + "\n" + String(tempsVol / 1000000.f) + "s");
 }
+
 #endif
