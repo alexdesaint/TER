@@ -49,35 +49,6 @@ void RWtab::init()
    */
 }
 
-/*void RWtab::write(int index)
-{
-
-    if (index >= 0 && index < 20)
-    {
-
-        for (int i = 0; i < 10; i++)
-        {
-            EEPROMWritelong(ADRESSE + 10 * index + i * 4, tabToutesMesures[index][i]);
-        }
-    }
-    EEPROM.commit();
-}
-
-uint32_t RWtab::read(int index)
-{
-
-    if (index >= 0 && index < 20)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            this->tabToutesMesures[index][i] = EEPROMReadlong(ADRESSE + 10 * index + i * 4);
-        }
-    }
-
-    //tabRead[0]=EEPROM.read(0);
-
-    return 0;
-}*/
 
 void RWtab::readAll()
 {
@@ -90,7 +61,6 @@ void RWtab::readAll()
     }
 
     this->index_write = EEPROMReadlong(ADRESSE + (10 * 20 +10) * 4);
-    this->index_remove = EEPROMReadlong(ADRESSE + (10 * 20 +11) * 4); 
 
 }
 
@@ -105,7 +75,6 @@ void RWtab::writeAll()
     }
 
     EEPROMWritelong(ADRESSE + (10 * 20 +10) * 4, this->index_write);
-    EEPROMWritelong(ADRESSE + (10 * 20 +11) * 4, this->index_remove);
 
     EEPROM.commit();
 }
@@ -121,13 +90,12 @@ void RWtab::remplirTableau(uint32_t tab[10])
         this->tabToutesMesures[this->index_write][i] = tab[i];
     }
     this->index_write++;
-    this->index_remove++;
-    this->index_remove++;
+
     if (this->index_write == 20)
         this->index_write = 0;
 }
 
-void RWtab::removeTab()
+/*void RWtab::removeTab()
 {
     for (int i = 0; i < 10; i++)
     {
@@ -136,44 +104,54 @@ void RWtab::removeTab()
     this->index_remove++;
     if (this->index_remove == 20)
         this->index_remove = 0;
-}
+}*/
 
 void RWtab::afficher()
 {
-    uint32_t index = this->index_write;
+    int index = this->index_write;
     Serial.println("");
     Serial.println("Tab Full ");
+
     for (int j = index - 1; j >= 0; j--)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            Serial.print(this->tabToutesMesures[j][i]);
-            Serial.print(" ");
-        }
-        Serial.println(" ");
+
+            for (int i = 0; i < 10; i++)
+            {
+                Serial.print(this->tabToutesMesures[j][i]);
+                Serial.print(" ");
+            }
+            Serial.println(" ");
+
+        
     }
-    for ( int j = 19; j > index; j--)
+    
+
+    for( int j = 19 ; j >= index ; j--)
     {
 
-        for (int i = 0; i < 10; i++)
-        {
-            Serial.print(this->tabToutesMesures[j][i]);
-            Serial.print(" ");
-        }
 
-        Serial.println(" ");
+
+            for (int i = 0; i < 10; i++)
+            {
+                Serial.print(this->tabToutesMesures[j][i]);
+                Serial.print(" ");
+            }
+
+            Serial.println(" ");
     }
+    
+    
 
     Serial.print("Index write = ");
     Serial.println(this->index_write);
-    Serial.print("Index Remove = ");
-    Serial.println(this->index_remove);
+
 }
+
+
 
 void RWtab::clearAll()
 {
-    this->index_remove = 90;
-    //this->index_write = 0;
+    this->index_write = 0;
     for (int j = 0; j < 20; j++)
     {
         for (int i = 0; i < 10; i++)
@@ -182,4 +160,41 @@ void RWtab::clearAll()
         }
         Serial.println(" ");
     }
+}
+
+void RWtab::getTabFilo(uint32_t tab[20][10]){
+
+    int index = this->index_write;
+    int index_tab = 0 ;
+
+    for (int j = index - 1; j >= 0; j--)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            tab[index_tab][i]= this->tabToutesMesures[j][i] ;
+
+        }
+        index_tab++;
+
+
+        if(index_tab>20)
+            Serial.print("Erreur FATALE !!! ");
+
+        
+    }
+    for ( int j = 19; j >= index; j--)
+    {
+
+        for (int i = 0; i < 10; i++)
+        {
+            tab[index_tab][i]=this->tabToutesMesures[j][i];
+
+
+        }
+        index_tab++;
+        if(index_tab>20)
+            Serial.print("Erreur FATALE !!! ");
+
+    }
+
 }

@@ -551,6 +551,21 @@ void loop() {
       rwtab.afficher();
     }
 
+    if(data == 'y'){
+      uint32_t tab1[20][10];
+      rwtab.getTabFilo(tab1);
+      Serial.println("affichage tableau fifo");
+      for(int i=0;i<20;i++){
+        for(int j=0;j<10;j++){
+
+          Serial.print( tab1[i][j] );
+          Serial.print(" ");
+        }
+        Serial.println(" ");
+      }
+
+    }
+
 
     
 
