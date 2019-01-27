@@ -9,6 +9,8 @@ using namespace std;
 //#define CONFIG_ADRESS (CONFIG_SECTOR*4096)
 //#define CONFIG_ADRESS1 CONFIG_ADRESS+8
 
+
+
 //This function will write a 4 byte (32bit) long to the eeprom at
 //the specified address to address + 3.
 void RWtab::EEPROMWritelong(int address, uint32_t value)
@@ -39,6 +41,10 @@ uint32_t RWtab::EEPROMReadlong(int address)
     return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
+RWtab::RWtab(){
+    EEPROM.begin(1000);
+}
+
 void RWtab::readAll()
 {
     for (int j = 0; j < 20; j++)
@@ -50,6 +56,7 @@ void RWtab::readAll()
     }
 
     this->index_write = EEPROMReadlong(ADRESSE + (10 * 20 + 10) * 4);
+    this->nbValue = EEPROMReadlong(ADRESSE + (10 * 20 + 11) * 4);
 }
 
 void RWtab::writeAll()
@@ -63,14 +70,13 @@ void RWtab::writeAll()
     }
 
     EEPROMWritelong(ADRESSE + (10 * 20 + 10) * 4, this->index_write);
+    EEPROMWritelong(ADRESSE + (10 * 20 + 11) * 4, this->nbValue);
 
     EEPROM.commit();
 }
 
 void RWtab::remplirTableau(array<uint32_t, 10> tab)
 {
-    Serial.println(this->index_write);
-
     this->tabToutesMesures[this->index_write] = tab;
 
     this->index_write++;
@@ -83,8 +89,8 @@ void RWtab::remplirTableau(array<uint32_t, 10> tab)
 }
 
 void RWtab::afficher()
-{
-    for (int j = this->index_write - 1; j >= 0; j--)
+{   int index = this->index_write ;
+    for (int j = index - 1; j >= 0; j--)
     {
         for (uint32_t i : this->tabToutesMesures[j])
             Serial.print(i + " ");
@@ -92,7 +98,7 @@ void RWtab::afficher()
         Serial.println("");
     }
 
-    for (int j = 19; j >= this->index_write; j--)
+    for (int j = 19; j >= index; j--)
     {
 
         for (uint32_t i : this->tabToutesMesures[j])
@@ -103,6 +109,8 @@ void RWtab::afficher()
 
     Serial.print("Index write = ");
     Serial.println(this->index_write);
+    Serial.print("Index write = ");
+    Serial.println(this->nbValue);
 }
 
 void RWtab::clearAll()
@@ -115,7 +123,6 @@ void RWtab::clearAll()
         {
             this->tabToutesMesures[j][i] = 0;
         }
-        Serial.println(" ");
     }
 }
 
@@ -157,20 +164,24 @@ std::list<std::array<uint32_t, 10>> RWtab::getTabLifo()
     int index = this->index_write;
     int index_tab = 0;
 
-    std::array<uint32_t, 10> tab;
+    if(index_tab == (int)this->nbValue)
+        return data;
 
     for (int j = index - 1; j >= 0; j--)
     {
         data.push_back(this->tabToutesMesures[j]);
-
         index_tab++;
+        if(index_tab ==  (int)this->nbValue)
+            return data;
         if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
     }
-    for (int j = (nbValue - index_write); j >= index; j--)
+    for (int j = 19; j >= index; j--)
     {
         data.push_back(this->tabToutesMesures[j]);
         index_tab++;
+        if(index_tab == (int) this->nbValue)
+            return data;
         if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
     }

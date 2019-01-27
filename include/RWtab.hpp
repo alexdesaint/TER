@@ -15,6 +15,7 @@ class RWtab
     void EEPROMWritelong(int address, uint32_t value);
 
   public:
+    RWtab();
     void clearAll();
     void writeAll();
     void readAll();

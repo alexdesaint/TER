@@ -601,39 +601,46 @@ void loop()
 
 void print(std::list<std::array<uint32_t, 10>> data)
 {
+  Serial.println(data.size());
   for (auto i : data)
   {
     for (auto j : i)
-      Serial.println(j + " ");
+      Serial.printf("%u ",j);
     Serial.println("");
   }
   Serial.println("");
 }
-
+int cpt = 0 ;
 RWtab rwtab;
 void setup()
 {
   Serial.begin(9600);
+
   Serial.println("");
   Serial.println("test TableauDesMesures");
   rwtab.readAll();
   print(rwtab.getTabLifo());
+  //rwtab.afficher();
 }
 
 void loop()
 {
   if (Serial.available())
   {
+    
     char data = Serial.read();
     if (data == 'a')
     {
       std::array<uint32_t, 10> tab;
       for (int i = 0; i < 10; i++)
-        tab[i] = (i + 1) * 10;
+        tab[i] = cpt++;
+
+
 
       rwtab.remplirTableau(tab);
       rwtab.writeAll();
       print(rwtab.getTabLifo());
+      //rwtab.afficher();
     }
 
     if (data == 'c')
@@ -641,6 +648,7 @@ void loop()
       rwtab.clearAll();
       rwtab.writeAll();
       print(rwtab.getTabLifo());
+     // rwtab.afficher();
     }
   }
 }
