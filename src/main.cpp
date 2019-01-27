@@ -109,7 +109,7 @@ Serveur serveur;
 int nbSaut = 0;
 int tempsVol = 0;
 int tempsTotal = 0;
-bool enMesure;
+bool enMesure = false;
 
 std::list<std::array<uint32_t, 10>> data;
 

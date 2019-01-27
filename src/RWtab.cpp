@@ -3,6 +3,8 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
+using namespace std;
+
 #define ADRESSE 0
 //#define CONFIG_ADRESS (CONFIG_SECTOR*4096)
 //#define CONFIG_ADRESS1 CONFIG_ADRESS+8
@@ -37,8 +39,6 @@ uint32_t RWtab::EEPROMReadlong(int address)
     return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
-
-
 void RWtab::readAll()
 {
     for (int j = 0; j < 20; j++)
@@ -49,8 +49,7 @@ void RWtab::readAll()
         }
     }
 
-    this->index_write = EEPROMReadlong(ADRESSE + (10 * 20 +10) * 4);
-
+    this->index_write = EEPROMReadlong(ADRESSE + (10 * 20 + 10) * 4);
 }
 
 void RWtab::writeAll()
@@ -63,78 +62,53 @@ void RWtab::writeAll()
         }
     }
 
-    EEPROMWritelong(ADRESSE + (10 * 20 +10) * 4, this->index_write);
+    EEPROMWritelong(ADRESSE + (10 * 20 + 10) * 4, this->index_write);
 
     EEPROM.commit();
 }
 
-void RWtab::remplirTableau(uint32_t tab[10])
+void RWtab::remplirTableau(array<uint32_t, 10> tab)
 {
-
-    Serial.println("Remplir tableau index");
     Serial.println(this->index_write);
 
-    for (int i = 0; i < 10; i++)
-    {
-        this->tabToutesMesures[this->index_write][i] = tab[i];
-    }
+    this->tabToutesMesures[this->index_write] = tab;
+
     this->index_write++;
 
-    if(this->index_lecture<20)
-     this->index_lecture++;
+    if (this->nbValue < 20)
+        this->nbValue++;
 
     if (this->index_write == 20)
         this->index_write = 0;
 }
 
-
 void RWtab::afficher()
 {
-    int index = this->index_write;
-    Serial.println("");
-    Serial.println("Tab Full ");
-
-    for (int j = index - 1; j >= 0; j--)
+    for (int j = this->index_write - 1; j >= 0; j--)
     {
-
-            for (int i = 0; i < 10; i++)
-            {
-                Serial.print(this->tabToutesMesures[j][i]);
-                Serial.print(" ");
-            }
-            Serial.println(" ");
-
+        for (uint32_t i : this->tabToutesMesures[j])
+            Serial.print(i + " ");
         
+        Serial.println("");
     }
-    
 
-    for( int j = 19 ; j >= index ; j--)
+    for (int j = 19; j >= this->index_write; j--)
     {
 
+        for (uint32_t i : this->tabToutesMesures[j])
+            Serial.print(i + " ");
 
-
-            for (int i = 0; i < 10; i++)
-            {
-                Serial.print(this->tabToutesMesures[j][i]);
-                Serial.print(" ");
-            }
-
-            Serial.println(" ");
+        Serial.println(" ");
     }
-    
-    
 
     Serial.print("Index write = ");
     Serial.println(this->index_write);
-
 }
-
-
 
 void RWtab::clearAll()
 {
     this->index_write = 0;
-    this->index_lecture=0;
+    this->nbValue = 0;
     for (int j = 0; j < 20; j++)
     {
         for (int i = 0; i < 10; i++)
@@ -145,77 +119,61 @@ void RWtab::clearAll()
     }
 }
 
-void RWtab::getTabFilo(uint32_t tab[20][10]){
+void RWtab::getTabFilo(uint32_t tab[20][10])
+{
 
     int index = this->index_write;
-    int index_tab = 0 ;
+    int index_tab = 0;
 
     for (int j = index - 1; j >= 0; j--)
     {
         for (int i = 0; i < 10; i++)
         {
-            tab[index_tab][i]= this->tabToutesMesures[j][i] ;
-
+            tab[index_tab][i] = this->tabToutesMesures[j][i];
         }
         index_tab++;
 
-
-        if(index_tab>20)
+        if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
-
-        
     }
-    for ( int j = 19; j >= index; j--)
+    for (int j = 19; j >= index; j--)
     {
 
         for (int i = 0; i < 10; i++)
         {
-            tab[index_tab][i]=this->tabToutesMesures[j][i];
-
-
+            tab[index_tab][i] = this->tabToutesMesures[j][i];
         }
         index_tab++;
-        if(index_tab>20)
+        if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
-
     }
-
 }
 
-std::list<std::array<uint32_t, 10>> RWtab::getTabLifo(){
+std::list<std::array<uint32_t, 10>> RWtab::getTabLifo()
+{
 
     std::list<std::array<uint32_t, 10>> data;
 
     int index = this->index_write;
-    int index_tab = 0 ;
+    int index_tab = 0;
 
     std::array<uint32_t, 10> tab;
-    
+
     for (int j = index - 1; j >= 0; j--)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            tab[i]= this->tabToutesMesures[j][i] ;
-        }
-        data.push_back(tab);
+        data.push_back(this->tabToutesMesures[j]);
 
         index_tab++;
-        if(index_tab>20)
-            Serial.print("Erreur FATALE !!! ");        
+        if (index_tab > 20)
+            Serial.print("Erreur FATALE !!! ");
     }
-    for ( int j = (index_lecture-index_write); j >= index; j--)
+    for (int j = (nbValue - index_write); j >= index; j--)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            tab[i]=this->tabToutesMesures[j][i];
-        }
-        data.push_back(tab);
+        data.push_back(this->tabToutesMesures[j]);
         index_tab++;
-        if(index_tab>20)
+        if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
     }
 
-return data;
-    
+    return data;
 }
-
