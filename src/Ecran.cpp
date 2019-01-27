@@ -8,8 +8,8 @@ void Ecran::init() {
   display.init();
 
   display.flipScreenVertically();
-  display.setFont(ArialMT_Plain_10);
-  Serial.println("init fini");
+  display.setFont(ArialMT_Plain_24);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
 }
 
 void Ecran::clear() {
@@ -18,8 +18,6 @@ void Ecran::clear() {
 
 void Ecran::write(String str) {
   display.clear();
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_24);
-  display.drawString(0, 20, str);
+  display.drawString(0, 10, str);
   display.display();
 }
