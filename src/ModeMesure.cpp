@@ -72,7 +72,7 @@ void ModeMesure::absencePersonne()
     this->lastTime = micros() ;
   }*/
 
-  if (this->indiceTabTemps < 10 && boolLancerMesure == true)
+  if (this->indiceTabTemps < 11 && boolLancerMesure == true)
   {
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
     if ((boolPresencePersonne == false) && (this->boolPause == true) &&
@@ -99,8 +99,11 @@ void ModeMesure::absencePersonne()
 
     this->boolLancerMesure = true;
   }
-  else
+  else{
     this->boolLancerMesure = false;
+    //Serial.print("hoola");
+    //Serial.print(indiceTabTemps);
+  }
 }
 
 bool ModeMesure::presencePersonne()
@@ -133,7 +136,7 @@ bool ModeMesure::presencePersonne()
 
 
 
-  if (this->indiceTabTemps < 10 && boolLancerMesure == true)
+  if (this->indiceTabTemps < 11 && boolLancerMesure == true)
   {
     // On detecte qu'on a touché le trampolin on lance le timer pour le temps de
     // pause
@@ -153,7 +156,7 @@ bool ModeMesure::presencePersonne()
         // tableau
 
 
-
+        // On traite l'interferance pour ignorer une valeur.
         if(boolInterference == true && this->indiceTabTemps > 0){
           this->indiceTabTemps--;
           tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
@@ -167,8 +170,10 @@ bool ModeMesure::presencePersonne()
           this->indiceTabTemps++;
         }
 
-        if(this->indiceTabTemps==10){
+        if(this->indiceTabTemps>10){
           this->boolFinMesure = true;
+          this->boolLancerMesure = false;
+          this->indiceTabTemps=0;
         }
 
         //Serial.println((uint32_t)(this->timefinished - this->timePauseEnd));
@@ -195,7 +200,6 @@ bool ModeMesure::presencePersonne()
   {
     this->boolLancerMesure = false;
     this->boolFinMesure = false;
-    // this->indiceTabTemps=0 ;
   }
 
   return this->boolFinMesure;
