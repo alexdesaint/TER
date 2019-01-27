@@ -9,8 +9,6 @@ using namespace std;
 //#define CONFIG_ADRESS (CONFIG_SECTOR*4096)
 //#define CONFIG_ADRESS1 CONFIG_ADRESS+8
 
-
-
 //This function will write a 4 byte (32bit) long to the eeprom at
 //the specified address to address + 3.
 void TableauDesMesures::EEPROMWritelong(int address, uint32_t value)
@@ -41,7 +39,8 @@ uint32_t TableauDesMesures::EEPROMReadlong(int address)
     return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
-TableauDesMesures::TableauDesMesures(){
+TableauDesMesures::TableauDesMesures()
+{
     EEPROM.begin(1000);
 }
 
@@ -88,31 +87,6 @@ void TableauDesMesures::remplirTableau(array<uint32_t, 10> tab)
         this->index_write = 0;
 }
 
-void TableauDesMesures::afficher()
-{   int index = this->index_write ;
-    for (int j = index - 1; j >= 0; j--)
-    {
-        for (uint32_t i : this->tabToutesMesures[j])
-            Serial.print(i + " ");
-        
-        Serial.println("");
-    }
-
-    for (int j = 19; j >= index; j--)
-    {
-
-        for (uint32_t i : this->tabToutesMesures[j])
-            Serial.print(i + " ");
-
-        Serial.println(" ");
-    }
-
-    Serial.print("Index write = ");
-    Serial.println(this->index_write);
-    Serial.print("Index write = ");
-    Serial.println(this->nbValue);
-}
-
 void TableauDesMesures::clearAll()
 {
     this->index_write = 0;
@@ -126,37 +100,7 @@ void TableauDesMesures::clearAll()
     }
 }
 
-void TableauDesMesures::getTabFilo(uint32_t tab[20][10])
-{
-
-    int index = this->index_write;
-    int index_tab = 0;
-
-    for (int j = index - 1; j >= 0; j--)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            tab[index_tab][i] = this->tabToutesMesures[j][i];
-        }
-        index_tab++;
-
-        if (index_tab > 20)
-            Serial.print("Erreur FATALE !!! ");
-    }
-    for (int j = 19; j >= index; j--)
-    {
-
-        for (int i = 0; i < 10; i++)
-        {
-            tab[index_tab][i] = this->tabToutesMesures[j][i];
-        }
-        index_tab++;
-        if (index_tab > 20)
-            Serial.print("Erreur FATALE !!! ");
-    }
-}
-
-std::list<std::array<uint32_t, 10>> TableauDesMesures::getTabLifo()
+std::list<std::array<uint32_t, 10>> TableauDesMesures::getTab()
 {
 
     std::list<std::array<uint32_t, 10>> data;
@@ -164,14 +108,14 @@ std::list<std::array<uint32_t, 10>> TableauDesMesures::getTabLifo()
     int index = this->index_write;
     int index_tab = 0;
 
-    if(index_tab == (int)this->nbValue)
+    if (index_tab == (int)this->nbValue)
         return data;
 
     for (int j = index - 1; j >= 0; j--)
     {
         data.push_back(this->tabToutesMesures[j]);
         index_tab++;
-        if(index_tab ==  (int)this->nbValue)
+        if (index_tab == (int)this->nbValue)
             return data;
         if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");
@@ -180,7 +124,7 @@ std::list<std::array<uint32_t, 10>> TableauDesMesures::getTabLifo()
     {
         data.push_back(this->tabToutesMesures[j]);
         index_tab++;
-        if(index_tab == (int) this->nbValue)
+        if (index_tab == (int)this->nbValue)
             return data;
         if (index_tab > 20)
             Serial.print("Erreur FATALE !!! ");

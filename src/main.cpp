@@ -97,11 +97,7 @@ void loop()
 #include "Ecran.hpp"
 #include "ModeMesure.hpp"
 #include "Serveur.hpp"
-
-// std include
-#include <array>
-#include <list>
-#include <cinttypes>
+#include "TableauDesMesures.hpp"
 
 ModeMesure modeMesure;
 Ecran ecran;
@@ -111,7 +107,7 @@ int tempsVol = 0;
 int tempsTotal = 0;
 bool enMesure = false;
 
-std::list<std::array<uint32_t, 10>> data;
+TableauDesMesures rwtab;
 
 void boutonPress()
 {
@@ -137,9 +133,10 @@ void laser1Change()
       for (uint32_t i : tabTemps)
         tempsTotal += i;
 
-      data.push_back(tabTemps);
+      rwtab.remplirTableau(tabTemps);
+      rwtab.writeAll();
 
-      serveur.modifyMeasurements(data);
+      serveur.modifyMeasurements(rwtab.getTab());
     }
   }
 
@@ -154,8 +151,8 @@ void setup()
   Serial.begin(9600);
   ecran.init();
   serveur.InitServeur("TempsDeVol");
-  serveur.modifyMeasurements(data);
-  ecran.write("début");
+  rwtab.readAll();
+  serveur.modifyMeasurements(rwtab.getTab());
 
   // LED
   pinMode(D0, OUTPUT);

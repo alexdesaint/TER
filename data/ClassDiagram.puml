@@ -4,48 +4,75 @@ title Machine temps de vol - Diagramme de classe
 
 class Ecran { 
     -adresse : uint8
-    +test()
     +clear()
     +write(string str)
-} 
+}
 
 class HTMLgenerator { 
     +getCode(list<array<uint32, 10>> temps) : string 
 }
 
-class WebServer {
-    -SSID : string
+class Serveur {
+    -DNS_PORT = 53 : const byte
+    -SSID : const char* 
     +WebServer(string SSID)
     +modifyMeasurements(list<array<uint32, 10>> tabTemps)
-    +test()
-} 
+}
 
-class ModeMesure{ 
-	-
-    -tabTemps : list<array<uint32, 10>>
-    -mesureCourante : array<uint32, 10>
+class ModeMesure{
+    -tabTemps : array<uint32, 10>
+    -indiceTabTemps : int
+    -pause : bool
+    -mode1 : bool
+    -mode2 : bool
+    -interference : bool
+    -presenceTrampolin : bool
+    -presenceP : bool 
+    -lancerM : bool 
+    -finMesure : bool 
     __
+    +ModeMesure (seuil = 300 : int, seuilInter = 100 : int)
+    +getTime(): uint32_t 
     +getTabTemps() : list<array<uint32, 10>>
     +lancerMesure()
     +presancePersonne() : bool
     .. Note ..
     presancePersonne() retourne un booléen pour indiquer la fin
-	
-	+presanceBouton()
-	+absenceBouton();
     de la mesure :
-    True - Mesure en cours
-    False - fin de la mesure
+    True - fin de la mesure
+    False - Mesure en cours
     ..
-    +absencePesonne()
+    +getIndicateur() : bool
+    +getIndice() : int
+    +absencePersonne()
+}
+
+class TableauDesMesures{
+    -nbValue : uint32
+    -index_write : uint32
+    -tabToutesMesure : std::array<uint32_t, 10>[20]
+    -EEPROMReadLong(adress:int): uint32
+    -EEPROMWriteLong(adress: int, value : uint32)
+    +clearAll()
+    +writeAll()
+    +readAll()
+    +remplirTableau(tab[10] : uint32)
+    +getTab() : list<array<uint32, 10>>
 }
 
 class main {
-    -uint8 BoutonMode
-    -uint8 BoutonLancerChrono
-    -uint8 LEDCapteur
-    -uint8 CapteurLaser
+    nbSaut = 0 : uint32
+    tempsVol = 0 : uint32
+    tempsTotal = 0 : uint32
+    bool enMesure = false : bool
     --
+    -void boutonPress()
+    -void laser1Change()
+    -void laser2Change()
+    -void laser2Change()
+    .. Note ..
+    interruptions déclanché sur le un front des lasers ou du bouton
+    ..
     +setup()
     +loop()
     ==
@@ -54,11 +81,12 @@ class main {
     avec les classes.
 }
 
-WebServer*--HTMLgenerator
+Serveur*--HTMLgenerator
 
 main*--Ecran
-main*--WebServer
+main*--Serveur
 main*--ModeMesure
+main*--TableauDesMesures
 
 hide main circle
 

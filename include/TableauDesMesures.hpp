@@ -20,10 +20,7 @@ class TableauDesMesures
     void writeAll();
     void readAll();
     void remplirTableau(std::array<uint32_t, 10> tab);
-    void afficher();
-    void getTabFilo(uint32_t tab[20][10]);
-
-    std::list<std::array<uint32_t, 10>> getTabLifo();
+    std::list<std::array<uint32_t, 10>> getTab();
 };
 
 #endif

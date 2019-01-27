@@ -514,87 +514,8 @@ void loop()
 
 #endif
 
-/******************************* test testTableauDesMesures *******************************/
+/******************************* test TableauDesMesures *******************************/
 #ifdef testTableauDesMesures
-
-#include "TableauDesMesures.hpp"
-#include "EEPROM.h"
-
-TableauDesMesures rwtab;
-void setup()
-{
-  Serial.begin(9600);
-  EEPROM.begin(1000);
-  Serial.print("Hello World!");
-}
-
-void loop()
-{
-
-  if (Serial.available())
-  {
-    char data = Serial.read();
-    if (data == 'k')
-    {
-      uint32_t tab[10];
-      for (int i = 0; i < 10; i++)
-        tab[i] = (i + 1) * 10;
-
-      rwtab.remplirTableau(tab);
-      Serial.println("true K");
-      rwtab.afficher();
-    }
-
-    if (data == 'l')
-    {
-      rwtab.writeAll();
-      Serial.println("false l");
-      //Serial.println(rwtab.read(0));
-      rwtab.afficher();
-    }
-    if (data == 'p')
-    {
-      rwtab.afficher();
-    }
-
-    if (data == 'j')
-    {
-      rwtab.clearAll();
-      Serial.println("false j");
-      rwtab.readAll();
-      rwtab.afficher();
-    }
-
-    if (data == 'o')
-    {
-      rwtab.clearAll();
-      Serial.println("false o");
-      rwtab.writeAll();
-      rwtab.afficher();
-    }
-
-    if (data == 'y')
-    {
-      uint32_t tab1[20][10];
-      rwtab.getTabFilo(tab1);
-      Serial.println("affichage tableau fifo");
-      for (int i = 0; i < 20; i++)
-      {
-        for (int j = 0; j < 10; j++)
-        {
-
-          Serial.print(tab1[i][j]);
-          Serial.print(" ");
-        }
-        Serial.println(" ");
-      }
-    }
-  }
-}
-#endif
-
-/******************************* test TableauDesMesures2 *******************************/
-#ifdef testTableauDesMesures2
 
 #include "TableauDesMesures.hpp"
 #include "EEPROM.h"
@@ -619,7 +540,7 @@ void setup()
   Serial.println("");
   Serial.println("test TableauDesMesures");
   rwtab.readAll();
-  print(rwtab.getTabLifo());
+  print(rwtab.getTab());
   //rwtab.afficher();
 }
 
@@ -639,7 +560,7 @@ void loop()
 
       rwtab.remplirTableau(tab);
       rwtab.writeAll();
-      print(rwtab.getTabLifo());
+      print(rwtab.getTab());
       //rwtab.afficher();
     }
 
@@ -647,46 +568,8 @@ void loop()
     {
       rwtab.clearAll();
       rwtab.writeAll();
-      print(rwtab.getTabLifo());
+      print(rwtab.getTab());
      // rwtab.afficher();
-    }
-  }
-}
-#endif
-
-/******************************* test Memoire *******************************/
-#ifdef testMemoire
-
-#include "RWtab.hpp"
-#include <EEPROM.h>
-RWtab rwtab;
-void setup()
-{
-  Serial.begin(9600);
-  EEPROM.begin(512);
-}
-
-void loop()
-{
-  int val = 10;
-  if (Serial.available())
-  {
-    char data = Serial.read();
-    if (data == 'k')
-    {
-      EEPROM.write(0, val);
-    }
-
-    if (data == 'l')
-    {
-      EEPROM.write(0, val + 20);
-    }
-
-    if (data == 'j')
-    {
-      int value = EEPROM.read(0);
-      Serial.print(value, DEC);
-      Serial.println();
     }
   }
 }
