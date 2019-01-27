@@ -594,19 +594,30 @@ void loop()
 #endif
 
 /******************************* test TableauDesMesures2 *******************************/
-#ifdef testTableauDesMesures
+#ifdef testTableauDesMesures2
 
 #include "RWtab.hpp"
 #include "EEPROM.h"
+
+void print(std::list<std::array<uint32_t, 10>> data)
+{
+  for (auto i : data)
+  {
+    for (auto j : i)
+      Serial.println(j + " ");
+    Serial.println("");
+  }
+  Serial.println("");
+}
 
 RWtab rwtab;
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("test TableauDesMesures");
+  Serial.println("");
   Serial.println("test TableauDesMesures");
   rwtab.readAll();
-  std::list<std::array<uint32_t, 10>> data = ;
+  print(rwtab.getTabLifo());
 }
 
 void loop()
@@ -616,25 +627,20 @@ void loop()
     char data = Serial.read();
     if (data == 'a')
     {
-      uint32_t tab[10];
+      std::array<uint32_t, 10> tab;
       for (int i = 0; i < 10; i++)
         tab[i] = (i + 1) * 10;
 
       rwtab.remplirTableau(tab);
-      Serial.println("true K");
-      rwtab.afficher();
+      rwtab.writeAll();
+      print(rwtab.getTabLifo());
     }
 
     if (data == 'c')
     {
+      rwtab.clearAll();
       rwtab.writeAll();
-      Serial.println("false l");
-      //Serial.println(rwtab.read(0));
-      rwtab.afficher();
-    }
-    if (data == 'p')
-    {
-      rwtab.afficher();
+      print(rwtab.getTabLifo());
     }
   }
 }
