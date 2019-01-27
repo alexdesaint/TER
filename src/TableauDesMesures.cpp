@@ -1,4 +1,4 @@
-#include "RWtab.hpp"
+#include "TableauDesMesures.hpp"
 #include <SPI.h>
 #include <Wire.h>
 #include <EEPROM.h>
@@ -13,7 +13,7 @@ using namespace std;
 
 //This function will write a 4 byte (32bit) long to the eeprom at
 //the specified address to address + 3.
-void RWtab::EEPROMWritelong(int address, uint32_t value)
+void TableauDesMesures::EEPROMWritelong(int address, uint32_t value)
 {
     //Decomposition from a long to 4 bytes by using bitshift.
     //One = Most significant -> Four = Least significant byte
@@ -29,7 +29,7 @@ void RWtab::EEPROMWritelong(int address, uint32_t value)
     EEPROM.write(address + 3, one);
 }
 
-uint32_t RWtab::EEPROMReadlong(int address)
+uint32_t TableauDesMesures::EEPROMReadlong(int address)
 {
     //Read the 4 bytes from the eeprom memory.
     uint8_t four = EEPROM.read(address);
@@ -41,11 +41,11 @@ uint32_t RWtab::EEPROMReadlong(int address)
     return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
-RWtab::RWtab(){
+TableauDesMesures::TableauDesMesures(){
     EEPROM.begin(1000);
 }
 
-void RWtab::readAll()
+void TableauDesMesures::readAll()
 {
     for (int j = 0; j < 20; j++)
     {
@@ -59,7 +59,7 @@ void RWtab::readAll()
     this->nbValue = EEPROMReadlong(ADRESSE + (10 * 20 + 11) * 4);
 }
 
-void RWtab::writeAll()
+void TableauDesMesures::writeAll()
 {
     for (int j = 0; j < 20; j++)
     {
@@ -75,7 +75,7 @@ void RWtab::writeAll()
     EEPROM.commit();
 }
 
-void RWtab::remplirTableau(array<uint32_t, 10> tab)
+void TableauDesMesures::remplirTableau(array<uint32_t, 10> tab)
 {
     this->tabToutesMesures[this->index_write] = tab;
 
@@ -88,7 +88,7 @@ void RWtab::remplirTableau(array<uint32_t, 10> tab)
         this->index_write = 0;
 }
 
-void RWtab::afficher()
+void TableauDesMesures::afficher()
 {   int index = this->index_write ;
     for (int j = index - 1; j >= 0; j--)
     {
@@ -113,7 +113,7 @@ void RWtab::afficher()
     Serial.println(this->nbValue);
 }
 
-void RWtab::clearAll()
+void TableauDesMesures::clearAll()
 {
     this->index_write = 0;
     this->nbValue = 0;
@@ -126,7 +126,7 @@ void RWtab::clearAll()
     }
 }
 
-void RWtab::getTabFilo(uint32_t tab[20][10])
+void TableauDesMesures::getTabFilo(uint32_t tab[20][10])
 {
 
     int index = this->index_write;
@@ -156,7 +156,7 @@ void RWtab::getTabFilo(uint32_t tab[20][10])
     }
 }
 
-std::list<std::array<uint32_t, 10>> RWtab::getTabLifo()
+std::list<std::array<uint32_t, 10>> TableauDesMesures::getTabLifo()
 {
 
     std::list<std::array<uint32_t, 10>> data;

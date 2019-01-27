@@ -5,7 +5,7 @@
 #include <array>
 #include <list>
 
-class RWtab
+class TableauDesMesures
 {
   private:
     uint32_t index_write, nbValue;
@@ -15,7 +15,7 @@ class RWtab
     void EEPROMWritelong(int address, uint32_t value);
 
   public:
-    RWtab();
+    TableauDesMesures();
     void clearAll();
     void writeAll();
     void readAll();

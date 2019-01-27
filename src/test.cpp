@@ -514,13 +514,13 @@ void loop()
 
 #endif
 
-/******************************* test RWtab *******************************/
-#ifdef testRWtab
+/******************************* test testTableauDesMesures *******************************/
+#ifdef testTableauDesMesures
 
-#include "RWtab.hpp"
+#include "TableauDesMesures.hpp"
 #include "EEPROM.h"
 
-RWtab rwtab;
+TableauDesMesures rwtab;
 void setup()
 {
   Serial.begin(9600);
@@ -596,7 +596,7 @@ void loop()
 /******************************* test TableauDesMesures2 *******************************/
 #ifdef testTableauDesMesures2
 
-#include "RWtab.hpp"
+#include "TableauDesMesures.hpp"
 #include "EEPROM.h"
 
 void print(std::list<std::array<uint32_t, 10>> data)
@@ -611,7 +611,7 @@ void print(std::list<std::array<uint32_t, 10>> data)
   Serial.println("");
 }
 int cpt = 0 ;
-RWtab rwtab;
+TableauDesMesures rwtab;
 void setup()
 {
   Serial.begin(9600);
