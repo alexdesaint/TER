@@ -150,7 +150,7 @@ String header = R"=====(
             for (var i = 0; i <= n; i++) {
                 var l = marge + i * (taille / (n));
                 line(ctx, marge - 5, l, taille + marge, l);
-                write(ctx, i * pas, marge - 10, l - 5);
+                write(ctx, (i * pas).toFixed(1), marge - 10, l - 5);
             }
 
             for (var i = 0; i < 10; i++) {
@@ -196,7 +196,7 @@ String header = R"=====(
 
             var i;
             for (i = 0; i < 10; i++) {
-                ret += '<tr><td>' + (i + 1) + '</td><td>' + table[i] / 1000000 + ' s</td></tr>';
+                ret += '<tr><td>' + (i + 1) + '</td><td>' + (table[i] / 1000000).toFixed(3) + ' s</td></tr>';
             }
 
             var sum = 0;
@@ -204,8 +204,8 @@ String header = R"=====(
                 sum += table[j];
             }
 
-            ret += '<tr><th>Total</th><td>' + sum / 1000000+ ' points </td></tr>';
-            ret += '<tr><th>Moyenne</th><td>' + sum / 1000000 / 10 + ' s </td></tr>';
+            ret += '<tr><th>Total</th><td>' + (sum / 1000000).toFixed(3) + ' points </td></tr>';
+            ret += '<tr><th>Moyenne</th><td>' + (sum / 1000000 / 10).toFixed(3) + ' s </td></tr>';
             ret += '</table>';
 
             return ret;
