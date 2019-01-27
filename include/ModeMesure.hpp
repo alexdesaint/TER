@@ -37,9 +37,7 @@ private:
 
 public:
   ModeMesure(int seuil=300 , int seuilInter=100);
-  uint32_t lectureTemps();
-
-  void init();
+  uint32_t getTime();
 
   std::array<uint32_t, 10> getTabTemps() ;
 
@@ -47,15 +45,11 @@ public:
 
   bool presencePersonne();
 
-  void presenceBouton();
-
   void lancerMesure();
 
   int getIndice();
 
-  void cleanTab();
-
-  uint32_t getTime();
+  
   
   bool getIndicateur();
 };

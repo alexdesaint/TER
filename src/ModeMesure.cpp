@@ -7,17 +7,8 @@ ModeMesure::ModeMesure(int seuil,int seuilInter){
   this->seuilRebond = seuil ;
 }
 
-void ModeMesure::init()
-{
-  this->indiceTabTemps = 0;
-  this->boolPause = false;
-  this->boolMode1 = false;
-  this->boolMode2 = false;
-}
 
 int ModeMesure::getIndice() { return this->indiceTabTemps; }
-
-uint32_t ModeMesure::lectureTemps() { return this->time_us; }
 
 void ModeMesure::absencePersonne()
 {
@@ -209,11 +200,6 @@ std::array<uint32_t, 10> ModeMesure::getTabTemps() { return this->tabTemps; }
 
 void ModeMesure::lancerMesure() { this->boolLancerMesure = true; }
 
-void ModeMesure::cleanTab()
-{
-  for (int i = 0; i < 10; i++)
-    this->tabTemps[i] = 0;
-}
 
 uint32_t ModeMesure::getTime()
 {
