@@ -37,17 +37,6 @@ uint32_t RWtab::EEPROMReadlong(int address)
     return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
-void RWtab::init()
-{
-    /*
-    for(int j=0 ; j<20 ;j++){
-        for(int i=0 ; i<10 ;i++){
-            this->tabToutesMesures[j][i] = EEPROM.read(ADRESSE+10*j+i);
-        }
-    }
-
-   */
-}
 
 
 void RWtab::readAll()
@@ -95,16 +84,6 @@ void RWtab::remplirTableau(uint32_t tab[10])
         this->index_write = 0;
 }
 
-/*void RWtab::removeTab()
-{
-    for (int i = 0; i < 10; i++)
-    {
-        this->tabToutesMesures[this->index_write][i] = 0;
-    }
-    this->index_remove++;
-    if (this->index_remove == 20)
-        this->index_remove = 0;
-}*/
 
 void RWtab::afficher()
 {

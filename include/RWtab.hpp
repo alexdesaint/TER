@@ -18,18 +18,11 @@ class RWtab {
 
 
     public:
-        void init();
-
         void clearAll();
-        void write(int indexTableau);
         void writeAll();
         void readAll();
-        uint32_t read(int indexTableau);
         void remplirTableau(uint32_t tab[10]);
-        void removeTab();
         void afficher();
-        void reset();
-
         void getTabFilo(uint32_t tab[20][10]);
 
 

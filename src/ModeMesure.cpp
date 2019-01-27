@@ -15,24 +15,24 @@ void ModeMesure::absencePersonne()
 
 
   presenceTrampolin = false;
-  boolPresencePersonne = false;
+  presenceP = false;
 
-    if ((boolMode1 = false) && (this->boolLancerMesure == false))
+    if ((mode1 = false) && (this->lancerM == false))
   {
     this->timestart = micros();
     this->timePauseStart = micros();
     this->timePauseEnd = micros();
     this->timefinished = micros();
     this->totalTempsPause = 0;
-    this->boolMode1 = true;
-    this->boolMode2 = false;
+    this->mode1 = true;
+    this->mode2 = false;
     this->time_us = 0;
     this->indiceTabTemps = 0;
     Serial.println("mode 1");
     this->boolPause = false;
   }
 
-  if ((boolPresencePersonne == false) && (this->boolLancerMesure == false))
+  if ((presenceP == false) && (this->lancerM == false))
   {
     // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas
     // appuyer dans le bouton quand on est dans cette situation la
@@ -47,8 +47,8 @@ void ModeMesure::absencePersonne()
 
   }
 
-  /*if ((boolPresencePersonne == false) && (this->boolPause == true) &&
-      (this->boolLancerMesure == false))
+  /*if ((presencePersonne == false) && (this->boolPause == true) &&
+      (this->lancerMesure == false))
   {
     this->boolPause = false;
     // On remet tout a 0 et si on appui dans le bouton on passe au mode 2 avec
@@ -63,11 +63,11 @@ void ModeMesure::absencePersonne()
     this->lastTime = micros() ;
   }*/
 
-  if (this->indiceTabTemps < 11 && boolLancerMesure == true)
+  if (this->indiceTabTemps < 11 && lancerM == true)
   {
     // On detecte qu'on a sortir du trampolin on compte le temps ecoulé de pause
-    if ((boolPresencePersonne == false) && (this->boolPause == true) &&
-        (boolLancerMesure == true))
+    if ((presenceP == false) && (this->boolPause == true) &&
+        (lancerM == true))
     {
       
       if((micros()-this->timePauseStart)/1000 > this->seuilInterferance){
@@ -76,22 +76,22 @@ void ModeMesure::absencePersonne()
         this->totalTempsPause =
           totalTempsPause + (this->timePauseEnd - this->timePauseStart);
         this->lastTime = (this->timePauseEnd - this->timePauseStart);
-        this->boolInterference = false ;
+        this->interferance = false ;
       }else
       {
       if(lastFlyTime > seuilRebond){
         this->boolPause = false;
-        this->boolInterference = true ;
+        this->interferance = true ;
         this->lastTime = micros();
       }
         /* code */
       }   
     }
 
-    this->boolLancerMesure = true;
+    this->lancerM = true;
   }
   else{
-    this->boolLancerMesure = false;
+    this->lancerM = false;
     //Serial.print("hoola");
     //Serial.print(indiceTabTemps);
   }
@@ -99,25 +99,25 @@ void ModeMesure::absencePersonne()
 
 bool ModeMesure::presencePersonne()
 {
-  this->boolPresencePersonne = true;
+  this->presenceP = true;
 
 
 
   // Init du mode2 seulement ce fait une foit quand on rentre
-  if ((boolMode2 = false) && (boolLancerMesure == true))
+  if ((mode2 = false) && (lancerM == true))
   {
     this->totalTempsPause = 0;
     // this->timestart = micros();
     // this->timePauseStart = micros();
     // this->timePauseEnd = micros();
     // this->timefinished = micros();
-    this->boolMode2 = true;
-    this->boolMode1 = false;
+    this->mode2 = true;
+    this->mode1 = false;
     this->indiceTabTemps = 0;
     Serial.println("mode 2");
   }
 
-    if ((boolPresencePersonne == true) && (this->boolLancerMesure == false))
+    if ((presenceP == true) && (this->lancerM == false))
   {
     // On remet tout a 0 on le fait dans ce cas , mais normalement on doit pas
     // appuyer dans le bouton quand on est dans cette situation la
@@ -127,12 +127,12 @@ bool ModeMesure::presencePersonne()
 
 
 
-  if (this->indiceTabTemps < 11 && boolLancerMesure == true)
+  if (this->indiceTabTemps < 11 && lancerM == true)
   {
     // On detecte qu'on a touché le trampolin on lance le timer pour le temps de
     // pause
-    if (boolPresencePersonne == true && this->boolPause == false &&
-        boolLancerMesure == true)
+    if (presenceP == true && this->boolPause == false &&
+        lancerM == true)
     {
      
 
@@ -142,18 +142,18 @@ bool ModeMesure::presencePersonne()
         this->boolPause = true;
         this->timePauseStart = micros();
         this->timefinished = micros();
-        this->boolFinMesure = false;
+        this->finMesure = false;
         // On calcule le temps de vols de chaque figure et on la stock dans un
         // tableau
 
 
         // On traite l'interferance pour ignorer une valeur.
-        if(boolInterference == true && this->indiceTabTemps > 0){
+        if(interferance == true && this->indiceTabTemps > 0){
           this->indiceTabTemps--;
           tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
           this->lastFlyTime = this->timefinished - this->timePauseEnd;
           this->indiceTabTemps++;
-          boolInterference = false;
+          interferance = false;
 
         }else{
           tabTemps[this->indiceTabTemps] = this->timefinished - this->timePauseEnd;
@@ -162,8 +162,8 @@ bool ModeMesure::presencePersonne()
         }
 
         if(this->indiceTabTemps>10){
-          this->boolFinMesure = true;
-          this->boolLancerMesure = false;
+          this->finMesure = true;
+          this->lancerM = false;
           this->indiceTabTemps=0;
         }
 
@@ -171,9 +171,9 @@ bool ModeMesure::presencePersonne()
         presenceTrampolin = true;
       }else
       {
-        if(boolInterference == true){
+        if(interferance == true){
           this->boolPause = true;
-          this->boolInterference = false ;
+          this->interferance = false ;
 
         }
         /* code */
@@ -189,16 +189,16 @@ bool ModeMesure::presencePersonne()
   }
   else
   {
-    this->boolLancerMesure = false;
-    this->boolFinMesure = false;
+    this->lancerM = false;
+    this->finMesure = false;
   }
 
-  return this->boolFinMesure;
+  return this->finMesure;
 }
 
 std::array<uint32_t, 10> ModeMesure::getTabTemps() { return this->tabTemps; }
 
-void ModeMesure::lancerMesure() { this->boolLancerMesure = true; }
+void ModeMesure::lancerMesure() { this->lancerM = true; }
 
 
 uint32_t ModeMesure::getTime()

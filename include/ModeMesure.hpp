@@ -22,13 +22,13 @@ private:
 
 
   // Bool pause , mode 1 et mode 2 sont les boolean qui servent a savoir si on est respectivement dans la pause , mode 1 ou mode 2
-  bool boolPause , boolMode1 , boolMode2 ; 
-  bool boolInterference = false ;
+  bool boolPause , mode1 , mode2 ; 
+  bool interferance = false ;
   bool presenceTrampolin = false ;
-  bool boolPresencePersonne = false ;
-  bool boolBouton = false ; 
-  bool boolLancerMesure = false ; 
-  bool boolFinMesure = false ;
+  bool presenceP = false ;
+  //bool bouton = false ; 
+  bool lancerM = false ; 
+  bool finMesure = false ;
 
 
   std::array<uint32_t, 10> tabTemps ;
