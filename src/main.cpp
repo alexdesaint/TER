@@ -169,10 +169,13 @@ void setup()
 void loop()
 {
   serveur.useServeur();
-  if (enMesure)
-    ecran.write("Saut " + String(nbSaut + 1) + "\n" + String(tempsVol / 1000000.f));
-  else
-    ecran.write("Points " + String(tempsTotal / 1000000.f) + "\n" + String(tempsVol / 1000000.f) + "s");
+  if (enMesure){
+    if(nbSaut == 0)
+      ecran.write("Saut 1");
+    else
+      ecran.write("Saut " + String(nbSaut) + "\n" + String(tempsVol / 1000000.f));
+  }else
+    ecran.write("Score " + String(tempsTotal / 1000000.f) + "\n" + String(tempsVol / 1000000.f) + "s");
 }
 
 #endif

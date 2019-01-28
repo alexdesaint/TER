@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-String header = R"=====(
+const char header[] = R"=====(
 <html>
 <head>
     <title>Mesures de temps de vol</title>
@@ -137,7 +137,7 @@ String header = R"=====(
                 pas = 0.2;
             } else if(Math.max.apply(null, dat)/div < 3) {
                 pas = 0.3;
-            } else if(Math.max.apply(null, dat)/div < 4) {
+            } else {
                 pas = 0.4;
             } 
 
@@ -267,8 +267,8 @@ String header = R"=====(
 <script>
 )=====";
 
-String foot = R"=====(
-    var code = '<table>';
+const char foot[] = R"=====(
+var code = '<table>';
     var i;
     for (i = 0; i < data.length; i++) {
         code += '<tr><td><h1>Tentative ' + (i + 1) + ' :</h1>' + makeTableauDesTemps(data[i]) + '</td><td><canvas id="chart' + i + '" width="350" height="350"></canvas></td></tr>';
@@ -295,67 +295,70 @@ String foot = R"=====(
 </html>
 )=====";
 
-String page_vide = R"=====(
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Mesures de temps de vol</title>
-    <meta charset="UTF-8">
-
-    <style>
-        body {
-            width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0px;
-        }
-    </style>
-</head>
-
-<body>
-    <h2>Il n'y a pas de mesures</h2>
-</body>
-
-</html>
+const char page_vide[] = R"=====(
+<!DOCTYPE html><html><head> <title>Mesures de temps de vol</title> <meta charset="UTF-8"> <style> body { width: 600px; margin-left: auto; margin-right: auto; margin-top: 0px; } </style></head><body> <h2>Il n'y a pas de mesures</h2></body></html>
 )=====";
 
 // dataExample[] = "data=[ [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10], [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]]";
 
-String HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps) {
-    if(temps.empty())
-        return page_vide;
+char HTMLgenerator::str[10000];
 
-    String ret = header;
+void BufferInsertStringValue(char *s, int startingPosition, char *command)
+{
+    int i = 0;
+    int stringLength = strlen(command) - 1;
+    for (i = 0; i <= stringLength; i++)
+    {
+        s[startingPosition + i - 1] = command[i];
+    }
+    s[startingPosition + i] = '\0';
+}
+
+char *HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps)
+{
+    if (temps.empty())
+        return (char *)page_vide;
 
     String data = " var data=[ ";
 
     bool start1 = false, start2 = false;
 
-    for (const std::array<uint32_t, 10> &tab : temps) {
+    for (const std::array<uint32_t, 10> &tab : temps)
+    {
         if (start1 == false)
             start1 = true;
-        else 
+        else
             data += ", ";
-            
-        for (uint32_t t : tab) {
-            if(start2 == false) {
+
+        for (uint32_t t : tab)
+        {
+            if (t > 4000000)
+                t = 4000000;
+
+            if (start2 == false)
+            {
                 start2 = true;
                 data += "[";
-            } else
+            }
+            else
                 data += ", ";
-            
 
-            data += std::uint32_t(t);
+            char buff[3000];
+            sprintf(buff, "%u", t);
+            data += buff;
         }
         data += "]";
         start2 = false;
     }
 
-    data += "]";
+    data += "];";
 
-    ret += data;
-    ret += foot;
+    int position = 0;
+    BufferInsertStringValue(str, position, (char*)header);
+    position += strlen(header);
+    BufferInsertStringValue(str, position, (char*)data.c_str());
+    position += strlen(data.c_str());
+    BufferInsertStringValue(str, position, (char*)foot);
 
-    return ret;
+    return str;
 }

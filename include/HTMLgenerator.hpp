@@ -12,7 +12,8 @@
 
 class HTMLgenerator {
   public:
-    String getCode(std::list<std::array<uint32_t, 10>> temps);
+  static char str[10000];
+    static char* getCode(std::list<std::array<uint32_t, 10>> temps);
 };
 
 #endif /* end of include guard: HTMLgenerator_hpp */

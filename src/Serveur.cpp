@@ -10,7 +10,10 @@
 
 ESP8266WebServer server(80);   //instantiate server at port 80 (http port)
 DNSServer dnsServer;
-String page;
+const char page_vide[] = R"=====(
+<!DOCTYPE html><html><head> <title>Mesures de temps de vol</title> <meta charset="UTF-8"> <style> body { width: 600px; margin-left: auto; margin-right: auto; margin-top: 0px; } </style></head><body> <h2>Il n'y a pas de mesures</h2></body></html>
+)=====";
+char *page = (char*)page_vide;
 IPAddress apIP(192, 168, 4, 1);
 IPAddress netMsk(255, 255, 255, 0);
 
@@ -25,8 +28,6 @@ void handleRoot(){
 
 void Serveur::InitServeur(String id) {
   ssid = id.c_str();
-  page = MAIN_page_vide;
-
   //delay(1000);
 
   WiFi.mode(WIFI_AP);
@@ -50,15 +51,10 @@ void Serveur::InitServeur(String id) {
   dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
   //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "www.tempsdevol.com", WiFi.softAPIP()); //Redirect research to the web page
-
-  page = MAIN_page_vide; //on commence par une page blanche
-
 }
 
 void Serveur::modifyMeasurements(std::list<std::array<uint32_t, 10>> temps) {
-  HTMLgenerator htmlCode = HTMLgenerator();
-
-  page = htmlCode.getCode(temps);
+  page = HTMLgenerator::getCode(temps);
 }
 
 void Serveur::useServeur() {

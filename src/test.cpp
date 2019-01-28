@@ -112,16 +112,35 @@ void loop()
 bool boutonOld;
 unsigned int num = 0;
 
+auto pinIn = D6;
+
 void ISR()
 {
-  Serial.println("Press");
+  bool led;
+  if (digitalRead(pinIn))
+  {
+    Serial.println("UP");
+    led = false;
+  }
+  else
+  {
+    led = true;
+    Serial.print("DO");
+    Serial.printf("%u ", num);
+    num++;
+
+  }
+  digitalWrite(D0, led);
 }
 
 void setup()
 {
   Serial.begin(9600);
-  pinMode(D5, INPUT);
-  attachInterrupt(digitalPinToInterrupt(D5), ISR, FALLING);
+  pinMode(pinIn, INPUT);
+  attachInterrupt(digitalPinToInterrupt(pinIn), ISR, CHANGE);
+
+  // LED
+  pinMode(D0, OUTPUT);
 }
 
 void loop()
@@ -526,12 +545,12 @@ void print(std::list<std::array<uint32_t, 10>> data)
   for (auto i : data)
   {
     for (auto j : i)
-      Serial.printf("%u ",j);
+      Serial.printf("%u ", j);
     Serial.println("");
   }
   Serial.println("");
 }
-int cpt = 0 ;
+int cpt = 0;
 TableauDesMesures rwtab;
 void setup()
 {
@@ -548,15 +567,13 @@ void loop()
 {
   if (Serial.available())
   {
-    
+
     char data = Serial.read();
     if (data == 'a')
     {
       std::array<uint32_t, 10> tab;
       for (int i = 0; i < 10; i++)
         tab[i] = cpt++;
-
-
 
       rwtab.remplirTableau(tab);
       rwtab.writeAll();
@@ -569,7 +586,65 @@ void loop()
       rwtab.clearAll();
       rwtab.writeAll();
       print(rwtab.getTab());
-     // rwtab.afficher();
+      // rwtab.afficher();
+    }
+  }
+}
+#endif
+/******************************* test TableauDesMesures *******************************/
+#ifdef testHTMLGENERATOR
+
+#include "TableauDesMesures.hpp"
+#include "HTMLgenerator.hpp"
+
+void print(std::list<std::array<uint32_t, 10>> data)
+{
+  Serial.println(data.size());
+  for (auto i : data)
+  {
+    for (auto j : i)
+      Serial.printf("%u ", j);
+    Serial.println("");
+  }
+  Serial.println("");
+}
+
+TableauDesMesures rwtab;
+HTMLgenerator gen;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  Serial.println("");
+  Serial.println("test HTML");
+  rwtab.readAll();
+  print(rwtab.getTab());
+  Serial.println(gen.getCode(rwtab.getTab()));
+}
+
+void loop()
+{
+delay(500);
+
+  if (Serial.available())
+  {
+
+    char data = Serial.read();
+    if (data == 'a')
+    {
+      std::array<uint32_t, 10> tab;
+      for (int i = 0; i < 10; i++)
+        tab[i] = 400000 * i;
+
+      rwtab.remplirTableau(tab);
+      Serial.println(gen.getCode(rwtab.getTab()));
+    }
+
+    if (data == 'c')
+    {
+      rwtab.clearAll();
+      Serial.println(gen.getCode(rwtab.getTab()));
     }
   }
 }
