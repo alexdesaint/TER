@@ -5,7 +5,6 @@
 
 using namespace std;
 
-#define ADRESSE 0
 //#define CONFIG_ADRESS (CONFIG_SECTOR*4096)
 //#define CONFIG_ADRESS1 CONFIG_ADRESS+8
 
@@ -46,16 +45,19 @@ TableauDesMesures::TableauDesMesures()
 
 void TableauDesMesures::readAll()
 {
+    this->index_write = EEPROMReadlong((10 * 20) * 4);
+    this->nbValue = EEPROMReadlong((10 * 20 + 1) * 4);
+
+    if(index_write > 19 || nbValue > 20)
+        clearAll();
+
     for (int j = 0; j < 20; j++)
     {
         for (int i = 0; i < 10; i++)
         {
-            this->tabToutesMesures[j][i] = EEPROMReadlong(ADRESSE + (10 * j + i) * 4);
+            this->tabToutesMesures[j][i] = EEPROMReadlong((10 * j + i) * 4);
         }
     }
-
-    this->index_write = EEPROMReadlong(ADRESSE + (10 * 20 + 10) * 4);
-    this->nbValue = EEPROMReadlong(ADRESSE + (10 * 20 + 11) * 4);
 }
 
 void TableauDesMesures::writeAll()
@@ -64,12 +66,12 @@ void TableauDesMesures::writeAll()
     {
         for (int i = 0; i < 10; i++)
         {
-            EEPROMWritelong(ADRESSE + (10 * j + i) * 4, this->tabToutesMesures[j][i]);
+            EEPROMWritelong((10 * j + i) * 4, this->tabToutesMesures[j][i]);
         }
     }
 
-    EEPROMWritelong(ADRESSE + (10 * 20 + 10) * 4, this->index_write);
-    EEPROMWritelong(ADRESSE + (10 * 20 + 11) * 4, this->nbValue);
+    EEPROMWritelong((10 * 20) * 4, this->index_write);
+    EEPROMWritelong((10 * 20 + 1) * 4, this->nbValue);
 
     EEPROM.commit();
 }

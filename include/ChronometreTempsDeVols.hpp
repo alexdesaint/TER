@@ -1,6 +1,10 @@
 #ifndef ChronometreTempsDeVols_hpp
 #define ChronometreTempsDeVols_hpp
 
+/*
+Expérimentale, une autre facon plus simple de coder le chrono
+*/
+
 #include <array>
 #include <cinttypes>
 

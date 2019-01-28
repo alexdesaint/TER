@@ -139,7 +139,7 @@ const char header[] = R"=====(
                 pas = 0.3;
             } else {
                 pas = 0.4;
-            } 
+            }
 
             marge = 50;
             taille = 270;
@@ -295,70 +295,46 @@ var code = '<table>';
 </html>
 )=====";
 
-const char page_vide[] = R"=====(
+const char HTMLgenerator::page_vide[] = R"=====(
 <!DOCTYPE html><html><head> <title>Mesures de temps de vol</title> <meta charset="UTF-8"> <style> body { width: 600px; margin-left: auto; margin-right: auto; margin-top: 0px; } </style></head><body> <h2>Il n'y a pas de mesures</h2></body></html>
 )=====";
 
-// dataExample[] = "data=[ [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10], [10, 33, 55, 44, 10, 22, 10, 77, 55, 10], [44, 48, 30, 22, 55, 66, 45, 22, 66, 10]]";
-
 char HTMLgenerator::str[10000];
 
-void BufferInsertStringValue(char *s, int startingPosition, char *command)
-{
-    int i = 0;
-    int stringLength = strlen(command) - 1;
-    for (i = 0; i <= stringLength; i++)
-    {
-        s[startingPosition + i - 1] = command[i];
-    }
-    s[startingPosition + i] = '\0';
-}
+char *HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps) {
+	if (temps.empty())
+		return (char *)page_vide;
 
-char *HTMLgenerator::getCode(std::list<std::array<uint32_t, 10>> temps)
-{
-    if (temps.empty())
-        return (char *)page_vide;
+	char data[2000] = " var data=[\n";
 
-    String data = " var data=[ ";
+	bool start = false;
 
-    bool start1 = false, start2 = false;
+	for (const std::array<uint32_t, 10> &tab : temps)
+	{
+		char buff[100];
 
-    for (const std::array<uint32_t, 10> &tab : temps)
-    {
-        if (start1 == false)
-            start1 = true;
-        else
-            data += ", ";
+		if (start)
+			sprintf(buff,
+					",\n[%u, %u, %u, %u, %u, %u, %u, %u, %u, %u]",
+					tab[0], tab[1], tab[2], tab[3], tab[4], tab[5], tab[6], tab[7], tab[8], tab[9]
+					);
+		else {
+			start = true;
+			sprintf(buff,
+					"[%u, %u, %u, %u, %u, %u, %u, %u, %u, %u]",
+					tab[0], tab[1], tab[2], tab[3], tab[4], tab[5], tab[6], tab[7], tab[8], tab[9]
+					);
+		}
 
-        for (uint32_t t : tab)
-        {
-            if (t > 4000000)
-                t = 4000000;
+		strcat(data, buff);
 
-            if (start2 == false)
-            {
-                start2 = true;
-                data += "[";
-            }
-            else
-                data += ", ";
+	}
 
-            char buff[3000];
-            sprintf(buff, "%u", t);
-            data += buff;
-        }
-        data += "]";
-        start2 = false;
-    }
+	strcat(data, "\n];");
 
-    data += "];";
+	strcpy(str, header);
+	strcat(str, data);
+	strcat(str, foot);
 
-    int position = 0;
-    BufferInsertStringValue(str, position, (char*)header);
-    position += strlen(header);
-    BufferInsertStringValue(str, position, (char*)data.c_str());
-    position += strlen(data.c_str());
-    BufferInsertStringValue(str, position, (char*)foot);
-
-    return str;
+	return str;
 }
