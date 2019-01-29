@@ -9,7 +9,8 @@ class Ecran {
 }
 
 class HTMLgenerator { 
-    +getCode(list<array<uint32, 10>> temps) : string 
+    +static page_vide : const char[]
+    +static getCode(list<array<uint32, 10>> temps) : string 
 }
 
 class Serveur {
