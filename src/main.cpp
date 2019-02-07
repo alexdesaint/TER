@@ -107,6 +107,9 @@ int tempsVol = 0;
 int tempsTotal = 0;
 bool enMesure = false;
 
+bool presensePersonne = false;
+bool c1 = true, c2 = true, c3 = true;
+
 TableauDesMesures rwtab;
 
 void boutonPress()
@@ -115,14 +118,8 @@ void boutonPress()
   enMesure = true;
 }
 
-void laser1Change()
-{
-  if (digitalRead(D6))
-  {
-    modeMesure.absencePersonne();
-  }
-  else
-  {
+void traitementCapteur() {
+  if((!c1 || !c2 || !c3) && !presensePersonne) {
     if (modeMesure.presencePersonne())
     {
       enMesure = false;
@@ -138,7 +135,68 @@ void laser1Change()
 
       serveur.modifyMeasurements(rwtab.getTab());
     }
+    Serial.println("PP");
+    presensePersonne = true;
   }
+
+  if(c1 && c2 && c3 && presensePersonne) {
+    Serial.println("AP");
+    modeMesure.absencePersonne();
+    presensePersonne = false;
+  }
+}
+
+void laser1Change()
+{
+  if (digitalRead(D6)) {
+    c1 = true;
+    traitementCapteur();
+    Serial.println("l1 t");
+  }  
+  else {
+    c1 = false;
+    traitementCapteur();
+    Serial.println("l1 f");
+  }
+    
+
+  digitalWrite(D0, modeMesure.getIndicateur());
+  tempsVol = modeMesure.getTime();
+  nbSaut = modeMesure.getIndice();
+}
+
+void laser2Change()
+{
+  if (digitalRead(D7)) {
+    c2 = true;
+    traitementCapteur();
+    Serial.println("l2 t");
+  }  
+  else {
+    c2 = false;
+    traitementCapteur();
+    Serial.println("l2 f");
+  }
+    
+
+  digitalWrite(D0, modeMesure.getIndicateur());
+  tempsVol = modeMesure.getTime();
+  nbSaut = modeMesure.getIndice();
+}
+
+void laser3Change()
+{
+  if (digitalRead(D8)) {
+    c3 = true;
+    traitementCapteur();
+    Serial.println("l3 t");
+  }  
+  else {
+    c3 = false;
+    traitementCapteur();
+    Serial.println("l3 f");
+  }
+    
 
   digitalWrite(D0, modeMesure.getIndicateur());
   tempsVol = modeMesure.getTime();
@@ -164,6 +222,12 @@ void setup()
   // Interruption laser
   pinMode(D6, INPUT);
   attachInterrupt(digitalPinToInterrupt(D6), laser1Change, CHANGE);
+
+  pinMode(D7, INPUT);
+  attachInterrupt(digitalPinToInterrupt(D7), laser2Change, CHANGE);
+
+  pinMode(D8, INPUT);
+  attachInterrupt(digitalPinToInterrupt(D8), laser3Change, CHANGE);
 }
 
 void loop()
