@@ -1,0 +1,129 @@
+\begin{circuitikz}[european,scale=0.85]
+
+%generation de la grille
+\newcounter{ct}
+
+\forloop{ct}{0}{\value{ct} < 15}
+{
+  \draw[dashed] (-0.5 + \value{ct}, -0.5) -> (-0.5 + \value{ct}, -0.5 + 20);
+}
+
+\forloop{ct}{0}{\value{ct} < 21}
+{
+  \draw[dashed] (-0.5, -0.5 + \value{ct}) -- (-0.5 + 14,-0.5 + \value{ct});
+}
+
+\forloop{ct}{1}{\value{ct} < 15}
+{
+  \node at (\value{ct}-1,20){\arabic{ct}};
+}
+
+\forloop{ct}{1}{\value{ct} < 21}
+{
+  \node at (14,21 - \value{ct}-1){\Alph{ct}};
+}
+
+%nodeMCU
+\node[draw] (D0) at (1,15) {$D0$};
+\node[draw] (D1) at (1,14) {$D1$};
+\node[draw] (D2) at (1,13) {$D2$};
+\node[draw] (D3) at (1,12) {$D3$};
+\node[draw] (D4) at (1,11) {$D4$};
+\node[draw] (3V1) at (1,10) {$3V$};
+\node[draw] (G1) at (1,9) {$G$};
+\node[draw] (D5) at (1,8) {$D5$};
+\node[draw] (D6) at (1,7) {$D6$};
+\node[draw] (D7) at (1,6) {$D7$};
+\node[draw] (D8) at (1,5) {$D8$};
+\node[draw] (RX) at (1,4) {$RX$};
+\node[draw] (TX) at (1,3) {$TX$};
+\node[draw] (G2) at (1,2) {$G$};
+\node[draw] (3V2) at (1,1) {$3V$};
+
+\node[draw] (A0) at (12,15){$A0$};
+\node[draw] (G3) at (12,14) {$G$};
+\node[draw] (VU) at (12,13) {$VU$};
+\node[draw] (S3) at (12,12) {$S3$};
+\node[draw] (S2) at (12,11) {$S2$};
+\node[draw] (S1) at (12,10) {$S1$};
+\node[draw] (SC) at (12,9) {$SC$};
+\node[draw] (S0) at (12,8) {$S0$};
+\node[draw] (SK) at (12,7) {$SK$};
+\node[draw] (G4) at (12,6) {$G$};
+\node[draw] (3v3) at (12,5) {$3V$};
+\node[draw] (EN) at (12,4) {$EN$};
+\node[draw, scale=0.8] (RST) at (12,3) {$RST$};
+\node[draw] (G5) at (12,2) {$G$};
+\node[draw, scale=0.8] (VIN) at (12,1) {$VIN$};
+
+%PIN ecran
+\node[draw, scale=0.8] (VCC) at (5,18) {$VCC$};
+\node[draw, scale=0.75] (GND) at (6,18) {$GND$};
+\node[draw, scale=0.8] (SCL) at (7,18) {$SCL$};
+\node[draw, scale=0.8] (SDA) at (8,18) {$SDA$};
+
+%LED
+\draw (D0.north) -- (1,19) to[short,-o] (13,19) to[short,-o, empty led] (13,18) to[short,-o] (13,17) to[R={\parbox{1cm}{\SI{100}{\ohm}}}] (13,14) to[short,o-] (G3.east);
+
+%Bouton (bas)
+\draw (3V2.east) to[short,-o] (2,1) to[R={\parbox{1cm}{\SI{1000}{\ohm}}}] (6,1) to[short,o-] (6,2);
+
+%Bouton (haut)
+\draw[brown] (6,7) to[short] (6,8) to[short] (D5.east);
+\draw (4,7) to[short] (4,9) to[short] (G1.east);
+
+%Bouton
+\draw
+    (6,2) to[short,o-o] (6,7)
+    (4,4.5) to[push button] (6,4.5)
+    (4,2) to[short,o-o] (4,7)
+;
+\node[text width=3cm] at (6,5.8){Bouton};
+
+%ecran
+\draw[red] (VU.west) to[short] (9,13) to[short] (9,16) to[short] (5,16) to[short] (VCC.south);
+\draw (G3.west) to[short] (10,14) to[short] (10,17) to[short] (6,17) to[short] (GND.south);
+\draw[blue] (D1.east) to[short] (8,14) to[short] (SDA.south);
+\draw[green] (D2.east) to[short] (7,13) to[short] (SCL.south);
+\node[text width=3cm] at (6.2,18.8){Ecran};
+
+%alim
+\draw[red] (12, -1) to[short, o-] (12,0) to[short] (13,0) to[short] (13,13) to[short] (VU.east);
+\draw (10, -1) to[short, o-] (10,2) to[short] (G5.west);
+
+\draw (10, -1) to[V=5V] (12, -1);
+
+%capteur 1
+\node[draw, scale=0.8] (C1O) at (-2,12){$OUT$};
+\draw (C1O.east) to[R={\parbox{1cm}{\SI{1000}{\ohm}}}] (0,12) to[short, o-] (D3.west);
+\node[draw, scale=0.8] (C1G) at (-3,12) {$GND$};
+\node[draw, scale=0.8] (C1V) at (-4,12) {$VCC$};
+\node[text width=3cm] at (-4.5,12.5){Capteur 1};
+
+%capteur 2
+\node[draw, scale=0.8] (C2O) at (-2,7){$OUT$};
+\draw (C2O.east) to[R={\parbox{1cm}{\SI{1000}{\ohm}}}] (0,7) to[short, o-] (D6.west);
+\node[draw, scale=0.8] (C2G) at (-3,7) {$GND$};
+\node[draw, scale=0.8] (C2V) at (-4,7) {$VCC$};
+\node[text width=3cm] at (-4.5,7.5){Capteur 2};
+
+%capteur 3
+\node[draw, scale=0.8] (C3O) at (-2,6){$OUT$};
+\draw (C3O.east) to[R={\parbox{1cm}{\SI{1000}{\ohm}}}] (0,6) to[short, o-] (D7.west);
+\node[draw, scale=0.8] (C3G) at (-3,6) {$GND$};
+\node[draw, scale=0.8] (C3V) at (-4,6) {$VCC$};
+\node[text width=3cm] at (-4.5,6.5){Capteur 3};
+
+\draw 
+    (C1G.south) -- (C2G.north)
+    (C2G.south) -- (C3G.north) 
+    (C3G.south) -- (-3,-1) -- (10, -1)
+    ;
+    
+\draw[red]
+    (C1V.south) -- (C2V.north)
+    (C2V.south) -- (C3V.north) 
+    (C3V.south) -- (-4,-2) -- (12, -2) -- (12, -1)
+    ;
+
+\end{circuitikz}

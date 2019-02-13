@@ -186,7 +186,7 @@ void laser2Change()
 
 void laser3Change()
 {
-  if (digitalRead(D8)) {
+  if (digitalRead(D3)) {
     c3 = true;
     traitementCapteur();
     Serial.println("l3 t");
@@ -226,8 +226,8 @@ void setup()
   pinMode(D7, INPUT);
   attachInterrupt(digitalPinToInterrupt(D7), laser2Change, CHANGE);
 
-  pinMode(D8, INPUT);
-  attachInterrupt(digitalPinToInterrupt(D8), laser3Change, CHANGE);
+  pinMode(D3, INPUT);
+  attachInterrupt(digitalPinToInterrupt(D3), laser3Change, CHANGE);
 }
 
 void loop()

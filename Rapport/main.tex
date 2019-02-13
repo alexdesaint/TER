@@ -1,0 +1,118 @@
+\documentclass[french]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[siunitx]{circuitikz}%circuits élèc
+\usetikzlibrary{babel}%compatibilité babel
+
+\usepackage{forloop}%Boucles
+\usepackage{textcomp}%Flèches
+
+\usepackage[T1]{fontenc}%tous les laractères
+\usepackage[french]{babel}%guillement
+\usepackage{listings}%ajout de code
+
+\usepackage{fancyhdr}
+
+\usepackage{tocbibind}
+
+\begin{document}
+
+
+\begin{titlepage}
+	\centering
+    
+    \includegraphics[width=6cm]{photoAlex/logo_upssitech.png}
+    \par
+    
+    \vspace{1cm}
+    
+	{\Large Rapport des Travaux Encadrés de Recherche\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Machine à temps de vol pour trampoline\par}
+	\vspace{2cm}
+	{\Large\itshape
+    Alexandre de Lingua de Saint Blanquat
+
+	Mohamed El-Mourabit
+
+	Hugo Diringer
+
+	Hippolyte Catteau
+
+	François Mahé
+    \par}
+    
+	\vfill
+    Cliente :\par
+    Gaëlle Robert
+
+	\vfill
+	{\large 3 février 2019\par}
+\end{titlepage}
+
+\begin{center}
+\section*{Remerciement}
+    
+    Nous voudrions remercier tout particulièrement Gaëlle Robert de nous avoir permis de travailler sur ce projet passionnant et aussi pour son aide et sa disponibilité.
+    
+    
+    \vspace{2cm}
+    
+    Ce projet à été fait pour l'association C.T. GYM de Toulouse,
+    
+    \makebox[\textwidth]{\includegraphics[width=4cm]{photoAlex/logo_gym}}
+    
+    et encadré par les enseignants de l'Université Paul Sabatier.
+    
+    \makebox[\textwidth]{\includegraphics[width=10cm]{photoAlex/logo_UPS}}
+\end{center}
+
+\newpage
+
+%Introduction
+\section*{Introduction}
+Durant la deuxième année à l’Upssitech, nous devons réaliser un projet nommé « TER » (Travaux Encadrés de Recherche). Ce projet a pour but de nous familiariser avec la gestion de projet et la recherche à propos de ce dernier.
+
+
+Nous avons donc eu un sujet concernant une machine à temps de vol pour trampoline proposer par Mme Gaëlle Robert, entraineur de sport de trampoline au club de Toulouse Rangueil. En effet, quand on rentre dans la compétition au trampoline, une part importante de la note concerne le temps de vol c’est-à-dire le temps que l’athlète passe en l’air. Lors de ces dix sauts sur lequel il est évalué, son temps total passé en l’air (en seconde) est ajouté à son score total donc une partie non négligeable. Le problème du client était que les modèles de machine à temps de vol proposé seulement par des Russes et des Canadiens atteignaient des prix qui n’étaient pas accessibles pour un petit club comme celui de Rangueil. Notre but principal était donc de réaliser cette machine à temps de vol à des prix dits « low cost ». 
+
+
+Le projet partant de zéro, nous avons dû effectuer toutes les tâches de la réalisation d’un produit. Nous avons commencé par la réalisation d’un cahier des charges avec le client puis d’une phase de conception suivie d’une phase de développement et enfin une phase de test pour redéfinir les problèmes qui nous ont échappé pendant la conception.
+
+
+Nous avons fini par rendre le produit fonctionnel, satisfaisant le cahier des charges dans tous ses points
+\newpage
+
+%table des matière
+\tableofcontents
+\newpage
+
+%Cahier des charges
+\input{cahierDesCharges.tex}
+\newpage
+
+%Organisation du groupe
+\input{organisationDuGroupe.tex}
+\newpage
+
+%Phase de conceptualisation
+\input{conceptualisation.tex}
+\newpage
+
+%Phase de conception
+\input{conception.tex}
+\newpage
+
+%Prototype final
+\input{prototypeFinal.tex}
+\newpage
+
+%Bilan
+\input{bilan.tex}
+\newpage
+
+\section*{Conclusion}
+Tous les membres du groupe ont apprécié travailler sur ce projet. Nous avons tous beaucoup appris et le prototype final est prometteur. Dans un premier temps, nous espérons qu'il sera utilisé pour les séances d'entraînements. Comme le développement est fait pour que ce soit facilement repris et amélioré, nous espérons aussi que cette Machine à Temps de Vol soit améliorée. Ce projet marque une première étape de conception. Ce prototype a de grandes capacités, mais  va-t-il rendre les Machines à Temps de Vol plus accessible ?
+\newpage
+
+\end{document}
