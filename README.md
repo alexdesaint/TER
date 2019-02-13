@@ -1,4 +1,4 @@
-# Air Timer System for Trampoline  
+# Midair Timing System for Trampoline 
 
 Utilisation du NodeMCU v3. Doc:
 https://docs.zerynth.com/latest/official/board.zerynth.nodemcu3/docs/index.html
