@@ -7,6 +7,7 @@ Dépendance :
 - librairies Arduino
 - github.com/ThingPulse/esp8266-oled-ssd1306 (SSD1306 library)
 
-Pour l'IDE c'est PlatformIO avec VS Code mais Atom est possible.
+## IDE 
+PlatformIO avec VS Code (Atom est aussi possible).
 
-Partie gestion de projet : https://github.com/Alexdesaint/TER/projects/1
+Répartition des taches : https://github.com/Alexdesaint/TER/projects/1
